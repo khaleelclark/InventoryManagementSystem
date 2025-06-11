@@ -2,13 +2,15 @@ public class Product {
     private String name;
     private int quantity;
     private int expectedQuantity;
+    private double estimatedCost;
     private Category category;
     private String location;
 
-    public Product(String name, int quantity, int expectedQuantity, Category category, String location) {
+    public Product(String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location) {
         this.name = name;
         this.quantity = quantity;
         this.expectedQuantity = expectedQuantity;
+        this.estimatedCost = estimatedCost;
         this.category = category;
         this.location = location;
     }
@@ -30,6 +32,12 @@ public class Product {
     }
     public void setExpectedQuantity(int expectedQuantity) {
         this.expectedQuantity = expectedQuantity;
+    }
+    public double getEstimatedCost() {
+        return estimatedCost;
+    }
+    public void setEstimatedCost(double estimatedCost) {
+        this.estimatedCost = estimatedCost;
     }
     public Category getCategory() {
         return category;

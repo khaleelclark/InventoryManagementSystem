@@ -9,4 +9,7 @@ public class ProductList extends ArrayList<Product> {
         return null;
         //TODO
     }
+
+    public void add(String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location) {
+    }
 }
