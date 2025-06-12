@@ -39,6 +39,7 @@ public class ProductManager {
                         System.out.println("\nThere are no products in the list to edit. Add some now!");
                         break;
                     }
+                    viewAllProductsByNameAndQuantity();
                     System.out.println("Please enter the name of the product you'd like to update:");
                     String name = scanner.nextLine();
 
@@ -55,7 +56,7 @@ public class ProductManager {
                     break;
                 }
                 case "7": {
-                    double total = calculateEstimatedTotalInventoryValue();
+                    double total = products.getTotalInventoryEstimate();
                     NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
                     System.out.println("Total estimated inventory value: " + currencyFormat.format(total));
                     break;
@@ -220,7 +221,25 @@ public class ProductManager {
     }
 
     public static void viewAllProducts() {
-        //TODO
+        if (products.isEmpty()) {
+            System.out.println("\nThere are no products in the list to view. Add some now!");
+        } else {
+            for (Product p : products) {
+                System.out.println(p.getProductInformation());
+
+            }
+        }
+    }
+
+    public static void viewAllProductsByNameAndQuantity() {
+        if (products.isEmpty()) {
+            System.out.println("\nThere are no products in the list to view. Add some now!");
+        } else {
+            for (Product p : products) {
+                System.out.println(p.getQuantityInformation());
+
+            }
+        }
     }
 
     public static void removeProduct() {
@@ -238,7 +257,6 @@ public class ProductManager {
     }
 
     public static boolean updateProductQuantity(String productName, int newQuantity) {
-        //done* needs test
         if (!containsProductWithName(productName)) {
             System.err.println("There are no products with the name: " + productName + ". Please try again.");
             return false;
@@ -257,19 +275,4 @@ public class ProductManager {
         return products.stream()
                 .anyMatch(p -> p.getName().equalsIgnoreCase(inputName));
     }
-
-    public static double calculateEstimatedTotalInventoryValue() {
-        //done
-        if (products.isEmpty()) {
-            System.out.println("\nYour estimated value is: $0.00. There are no products in your inventory. Add some products now to calculate your estimated value!");
-            return 0.0;
-        }
-        double total = 0;
-        for (Product p : products) {
-            total += p.getEstimatedCost() * p.getQuantity();
-        }
-        return total;
-    }
-
-
 }

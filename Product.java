@@ -18,37 +18,56 @@ public class Product {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public int getQuantity() {
         return quantity;
     }
+
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
     public int getExpectedQuantity() {
         return expectedQuantity;
     }
+
     public void setExpectedQuantity(int expectedQuantity) {
         this.expectedQuantity = expectedQuantity;
     }
+
     public double getEstimatedCost() {
         return estimatedCost;
     }
+
     public void setEstimatedCost(double estimatedCost) {
         this.estimatedCost = estimatedCost;
     }
+
     public Category getCategory() {
         return category;
     }
+
     public void setCategory(Category category) {
         this.category = category;
     }
+
     public String getLocation() {
         return location;
     }
+
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getProductInformation() {
+        return "Name: " + name + " Quantity: " + quantity + " Expected Quantity: " + expectedQuantity + " Estimated Cost: " + estimatedCost + " Category: " + category.getCategoryName() + " Location: " + location;
+    }
+
+    public String getQuantityInformation() {
+        return "Name: " + name + " Quantity: " + quantity + " Expected Quantity: " + expectedQuantity;
     }
 }
