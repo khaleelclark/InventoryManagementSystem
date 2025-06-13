@@ -1,6 +1,11 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class ProductManager {
     private static final ProductList products = new ProductList();
@@ -203,8 +208,121 @@ public class ProductManager {
     }
 
     public static void addProductFromFile() {
-        //TODO
+        System.out.println("""
+                Enter the absolute, or relative path of the file you wish to use to load the LMS, without quotations.
+                Absolute Ex. C:\\InventorySystem\\Inventory\\Products\\products.csv
+                Relative Ex. .\\Products\\products.csv""");
+
+        String filePath = scanner.nextLine();
+        File file = new File(filePath);
+
+        String lowerCasePath = filePath.toLowerCase();
+        if (!(lowerCasePath.endsWith(".csv") || lowerCasePath.endsWith(".txt"))) {
+            System.err.println("Error: Only .csv and .txt files are allowed.");
+            return;
+        }
+
+        try {
+            if (file.length() > 500_000) {
+                System.err.println("Error: File too large. Please upload a smaller product file.");
+                return;
+            }
+
+            try (Stream<String> lines = Files.lines(file.toPath())) {
+                long lineCount = lines.count();
+                if (lineCount > 100) {
+                    System.err.println("Error: File contains too many lines. Please limit your input to 100 products.");
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file for validation: " + e.getMessage());
+            return;
+        }
+
+        try (Scanner fileScanner = new Scanner(file)) {
+            int line = 1;
+
+            while (fileScanner.hasNextLine()) {
+                String input = fileScanner.nextLine();
+                String[] columns = input.split(",");
+
+                if (columns.length != 6) {
+                    System.err.println("Error on line " + line + ": Expected 6 columns but found " + columns.length);
+                    line++;
+                    continue;
+                }
+
+                String productName = columns[0].trim();
+                if (!isValidProductName(productName)) {
+                    System.err.println("Error on line " + line + ": Invalid product name '" + productName + "'");
+                    line++;
+                    continue;
+                }
+
+                int quantity, expectedQuantity;
+                double estimatedCost;
+                Category category;
+                String location = columns[5].trim();
+
+                try {
+                    quantity = Integer.parseInt(columns[1].trim());
+                    if (quantity <= 0 || quantity > 100) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    System.err.println("Error on line " + line + ": Quantity must be a number between 1 and 100.");
+                    line++;
+                    continue;
+                }
+
+                try {
+                    expectedQuantity = Integer.parseInt(columns[2].trim());
+                    if (expectedQuantity <= 0 || expectedQuantity > 100) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    System.err.println("Error on line " + line + ": Expected quantity must be a number between 1 and 100.");
+                    line++;
+                    continue;
+                }
+
+                try {
+                    estimatedCost = Double.parseDouble(columns[3].trim());
+                    if (estimatedCost < 0) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    System.err.println("Error on line " + line + ": Estimated cost must be a positive number.");
+                    line++;
+                    continue;
+                }
+
+                try {
+                    category = Category.valueOf(columns[4].trim().toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Error on line " + line + ": Invalid category '" + columns[4].trim() + "'");
+                    line++;
+                    continue;
+                }
+
+                if (!isValidProductName(location)) {
+                    System.err.println("Error on line " + line + ": Invalid location '" + location + "'");
+                    line++;
+                    continue;
+                }
+
+                products.add(new Product(productName, quantity, expectedQuantity, estimatedCost, category, location));
+                line++;
+            }
+
+            if (!products.isEmpty()) {
+                System.out.println("No Products were added.");
+            } else {
+                System.out.println("\nFile loaded successfully!\nCurrent Products:");
+                viewAllProducts();
+
+            }
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Error opening file: " + e.getMessage());
+        }
     }
+
 
     public static boolean isValidProductName(String name) {
         if (name == null || name.trim().isEmpty()) {
@@ -222,9 +340,9 @@ public class ProductManager {
             return false;
         }
 
-        if (!name.matches("[a-zA-Z0-9 '\\-(),]+")) {
+        if (!name.matches("[a-zA-Z0-9 '\\-()]+")) {
             System.out.println("Error: Product name contains invalid characters.");
-            System.out.println("Allowed: letters, numbers, spaces, apostrophes ('), dashes (-), parentheses, and commas.");
+            System.out.println("Allowed: letters, numbers, spaces, apostrophes ('), dashes (-), and parentheses");
             return false;
         }
 
