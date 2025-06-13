@@ -95,8 +95,11 @@ public class ProductManager {
         while (true) {
             String name;
             while (true) {
-                System.out.println("\nPlease enter the name of the product you wish to add:");
+                System.out.println("\nPlease enter the name of the product you wish to add or enter 'c' to cancel");
                 name = scanner.nextLine();
+                if (name.equals("c")) {
+                    return;
+                }
                 if (isValidProductName(name)) {
                     break;
                 } else {
@@ -106,8 +109,11 @@ public class ProductManager {
 
             int quantity;
             while (true) {
-                System.out.println("\nPlease enter the quantity you wish to add:");
+                System.out.println("\nPlease enter the quantity you wish to add or enter 'c' to cancel");
                 String quantityString = scanner.nextLine();
+                if (quantityString.equals("c")) {
+                    return;
+                }
 
                 try {
                     quantity = Integer.parseInt(quantityString);
@@ -122,8 +128,11 @@ public class ProductManager {
 
             int expectedQuantity;
             while (true) {
-                System.out.println("\nPlease enter the expected quantity of the item you wish to add:");
+                System.out.println("\nPlease enter the expected quantity of the item you wish to add or enter 'c' to cancel");
                 String expectedQuantityString = scanner.nextLine();
+                if (expectedQuantityString.equals("c")) {
+                    return;
+                }
 
                 try {
                     expectedQuantity = Integer.parseInt(expectedQuantityString);
@@ -138,8 +147,12 @@ public class ProductManager {
 
             double estimatedCost;
             while (true) {
-                System.out.println("\nPlease enter the estimated cost of the item you wish to add:");
+                System.out.println("\nPlease enter the estimated cost of the item you wish to add or enter 'c' to cancel");
                 String estimatedCostScan = scanner.nextLine();
+                if (estimatedCostScan.equals("c")) {
+                    return;
+                }
+
                 try {
                     estimatedCost = Double.parseDouble(estimatedCostScan);
                     if (estimatedCost < 0) {
@@ -180,8 +193,11 @@ public class ProductManager {
 
             String location;
             while (true) {
-                System.out.println("\nPlease enter the location of the product you wish to add:");
+                System.out.println("\nPlease enter the location of the product you wish to add, or enter 'c' to cancel");
                 location = scanner.nextLine();
+                if (location.equals("c")) {
+                    return;
+                }
                 if (isValidProductName(location)) {
                     break;
                 } else {
@@ -311,11 +327,10 @@ public class ProductManager {
             }
 
             if (!products.isEmpty()) {
-                System.out.println("No Products were added.");
-            } else {
                 System.out.println("\nFile loaded successfully!\nCurrent Products:");
                 viewAllProducts();
-
+            } else {
+                System.out.println("No Products were added.");
             }
 
         } catch (FileNotFoundException e) {
@@ -400,10 +415,18 @@ public class ProductManager {
         }
         for (Product p : products) {
             if (p.getName().equalsIgnoreCase(productName)) {
-                p.setQuantity(newQuantity);
-                return true;
+                System.out.println("Do you want to update this product? (y/n)");
+                String confirm = scanner.nextLine();
+
+                if (confirm.equalsIgnoreCase("y")) {
+                    p.setQuantity(newQuantity);
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
+
         return false;
     }
 
