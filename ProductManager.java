@@ -47,6 +47,7 @@ public class ProductManager {
                 case "5":
                     updateProduct();
                     break;
+
                 case "6": {
                     if (products.isEmpty()) {
                         System.out.println("\nThere are no products in the list to edit. Add some now!");
@@ -399,14 +400,97 @@ public class ProductManager {
 
 
     public static void updateProduct() {
-        //TODO
-        String name;
-        int quantity;
-        int expectedQuantity;
-        double estimatedCost;
-        Category category;
-        String location;
+        System.out.print("Enter the name of the product to update: ");
+        viewAllProducts();
+        String inputName = scanner.nextLine().trim();
+
+        if (!containsProductWithName(inputName)) {
+            System.err.println("No product found with the name: " + inputName);
+            return;
+        }
+
+        Product product = getProductByName(inputName);
+
+        System.out.println("Leave a field blank to keep the current value.");
+
+        System.out.print("New name (" + product.getName() + "): ");
+        String newName = scanner.nextLine().trim();
+        if (!newName.isBlank() && isValidProductName(newName)) {
+            product.setName(newName);
+        }
+
+        System.out.print("New quantity (" + product.getQuantity() + "): ");
+        String quantityInput = scanner.nextLine().trim();
+        if (!quantityInput.isBlank()) {
+            try {
+                int newQty = Integer.parseInt(quantityInput);
+                if (newQty > 0 && newQty <= 100) {
+                    product.setQuantity(newQty);
+                } else {
+                    System.err.println("Quantity must be between 1 and 100. Skipping.");
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid number. Skipping quantity update.");
+            }
+        }
+
+        System.out.print("New expected quantity (" + product.getExpectedQuantity() + "): ");
+        String expectedInput = scanner.nextLine().trim();
+        if (!expectedInput.isBlank()) {
+            try {
+                int newExpected = Integer.parseInt(expectedInput);
+                if (newExpected > 0 && newExpected <= 100) {
+                    product.setExpectedQuantity(newExpected);
+                } else {
+                    System.err.println("Expected quantity must be between 1 and 100. Skipping.");
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid number. Skipping expected quantity update.");
+            }
+        }
+
+        System.out.print("New estimated cost (" + product.getEstimatedCost() + "): ");
+        String costInput = scanner.nextLine().trim();
+        if (!costInput.isBlank()) {
+            try {
+                double newCost = Double.parseDouble(costInput);
+                if (newCost >= 0) {
+                    product.setEstimatedCost(newCost);
+                } else {
+                    System.err.println("Estimated cost must be non-negative. Skipping.");
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid number. Skipping cost update.");
+            }
+        }
+
+        System.out.print("New category (" + product.getCategory() + "): ");
+        String catInput = scanner.nextLine().trim();
+        if (!catInput.isBlank()) {
+            try {
+                Category newCategory = Category.valueOf(catInput.toUpperCase());
+                product.setCategory(newCategory);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Invalid category. Skipping category update.");
+            }
+        }
+
+        System.out.print("New location (" + product.getLocation() + "): ");
+        String newLoc = scanner.nextLine().trim();
+        if (!newLoc.isBlank() && isValidProductName(newLoc)) {
+            product.setLocation(newLoc);
+        }
+
+        System.out.println("Product updated successfully.");
     }
+
+    public static Product getProductByName(String inputName) {
+        return products.stream()
+                .filter(p -> p.getName().equalsIgnoreCase(inputName))
+                .findFirst()
+                .orElse(null);
+    }
+
 
     public static boolean updateProductQuantity(String productName, int newQuantity) {
         if (!containsProductWithName(productName)) {
