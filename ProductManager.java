@@ -16,7 +16,8 @@ public class ProductManager {
             System.out.println("5. Update a Product");
             System.out.println("6. Update a Product's Quantity Directly");
             System.out.println("7. Calculate the Estimated Total Value of the Inventory Management System");
-            System.out.println("8. Exit the Inventory Management System");
+            System.out.println("8. View all understocked products");
+            System.out.println("9. Exit the Inventory Management System");
 
             switch (scanner.nextLine()) {
                 case "1":
@@ -43,7 +44,7 @@ public class ProductManager {
                     System.out.println("Please enter the name of the product you'd like to update:");
                     String name = scanner.nextLine();
 
-                    System.out.println("Please enter the updated quantity:");
+                    System.out.println("Please enter the updated " + name + " quantity:");
                     int quantity = Integer.parseInt(scanner.nextLine());
 
                     boolean updated = updateProductQuantity(name, quantity);
@@ -62,6 +63,10 @@ public class ProductManager {
                     break;
                 }
                 case "8": {
+                    products.getUnderstockedProducts();
+                    break;
+                }
+                case "9": {
                     System.out.println("Thank you for using Zindel's IMS");
                     System.exit(0);
                     break;

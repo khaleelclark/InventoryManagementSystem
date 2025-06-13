@@ -15,8 +15,28 @@ public class ProductList extends ArrayList<Product> {
         return total;
     }
 
-    public ArrayList<Product> getUnderstockedProducts() {
-        return null;
-        //TODO
+    public void getUnderstockedProducts() {
+        ProductList understockedProducts = new ProductList();
+
+        if (this.isEmpty()) {
+            System.out.println("No products in inventory.");
+            return;
+        }
+
+        for (Product p : this) {
+            if (p.getQuantity() < p.getExpectedQuantity()) {
+                understockedProducts.add(p);
+            }
+        }
+
+        if (understockedProducts.isEmpty()) {
+            System.out.println("No understocked products!");
+        } else {
+            System.out.println("Understocked Products:");
+            for (Product p : understockedProducts) {
+                System.out.println(p.getQuantityInformation());
+            }
+        }
     }
+
 }
