@@ -30,7 +30,14 @@ public class ProductManager {
                     viewAllProducts();
                     break;
                 case "4":
-                    removeProduct();
+                    if (!products.isEmpty()) {
+                        System.out.println("Please enter the name of the product you wish to remove:");
+                        viewAllProducts();
+                        String name = scanner.nextLine();
+                        removeProduct(name);
+                    } else {
+                        System.out.println("\nThere are no products in the list to remove. Add some now!");
+                    }
                     break;
                 case "5":
                     updateProduct();
@@ -192,7 +199,6 @@ public class ProductManager {
             if (!again.equalsIgnoreCase("y")) {
                 break;
             }
-
         }
     }
 
@@ -247,9 +253,17 @@ public class ProductManager {
         }
     }
 
-    public static void removeProduct() {
-        //TODO
+    public static void removeProduct(String name) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getName().equalsIgnoreCase(name)) {
+                products.remove(i);
+                return;
+            }
+        }
+
+        System.err.println("There are no products with the name: " + name + ". Please try again.");
     }
+
 
     public static void updateProduct() {
         //TODO
