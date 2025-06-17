@@ -26,26 +26,41 @@ public class ProductManager {
 
             switch (scanner.nextLine()) {
                 case "1":
-                    addProductFromFile();
+                    boolean addProductFromFileSuccessful = addProductFromFile();
+                    if (addProductFromFileSuccessful) {
+                        System.out.println("Product added successfully!");
+                    } else {
+                        System.out.println("No Products were added.");
+                    }
                     break;
                 case "2":
-                    addProductManually();
+                    boolean addProductManuallySuccessful = addProductManually();
+                    if (addProductManuallySuccessful) {
+                        System.out.println("Product added successfully!");
+                    } else {
+                        System.out.println("No Products were added.");
+                    }
                     break;
                 case "3":
                     viewAllProducts();
                     break;
                 case "4":
-                    if (!products.isEmpty()) {
-                        System.out.println("Please enter the name of the product you wish to remove:");
+                    boolean removeProduct = removeProduct();
+                    if (removeProduct) {
+                        System.out.println("Product removed successfully!");
                         viewAllProducts();
-                        String name = scanner.nextLine();
-                        removeProduct(name);
                     } else {
-                        System.out.println("\nThere are no products in the list to remove. Add some now!");
+                        System.out.println("No Products were removed.");
                     }
                     break;
                 case "5":
-                    updateProduct();
+                    boolean updateProduct = updateProduct();
+                    if (updateProduct) {
+                        System.out.println("Product updated successfully!");
+                        viewAllProducts();
+                    } else {
+                        System.out.println("No product(s) have been updated.");
+                    }
                     break;
 
                 case "6": {
@@ -92,139 +107,138 @@ public class ProductManager {
     }
 
 
-    public static void addProductManually() {
+    public static boolean addProductManually() {
+        String name;
         while (true) {
-            String name;
-            while (true) {
-                System.out.println("\nPlease enter the name of the product you wish to add or enter 'c' to cancel");
-                name = scanner.nextLine();
-                if (name.equals("c")) {
-                    return;
+            System.out.println("\nPlease enter the name of the product you wish to add or enter 'c' to cancel");
+            name = scanner.nextLine();
+            if (name.equalsIgnoreCase("c")) {
+                return false;
+            }
+            if (isValidProductName(name)) {
+                break;
+            } else {
+                System.out.println("Please try again");
+            }
+        }
+
+        int quantity;
+        while (true) {
+            System.out.println("\nPlease enter the quantity you wish to add or enter 'c' to cancel");
+            String quantityString = scanner.nextLine();
+            if (quantityString.equalsIgnoreCase("c")) {
+                return false;
+            }
+
+            try {
+                quantity = Integer.parseInt(quantityString);
+                if (quantity <= 0 || quantity > 100) {
+                    System.err.println("Quantity should be between 0 and 100");
+                    continue;
                 }
-                if (isValidProductName(name)) {
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Error: The quantity amount must be a number between 0 and 100");
+            }
+        }
+
+        int expectedQuantity;
+        while (true) {
+            System.out.println("\nPlease enter the expected quantity of the item you wish to add or enter 'c' to cancel");
+            String expectedQuantityString = scanner.nextLine();
+            if (expectedQuantityString.equalsIgnoreCase("c")) {
+                return false;
+            }
+
+            try {
+                expectedQuantity = Integer.parseInt(expectedQuantityString);
+                if (expectedQuantity <= 0 || expectedQuantity > 100) {
+                    System.err.println("Quantity should be between 0 and 100");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Error: The expected quantity amount must be a number between 0 and 100");
+            }
+        }
+
+        double estimatedCost;
+        while (true) {
+            System.out.println("\nPlease enter the estimated cost of the item you wish to add or enter 'c' to cancel");
+            String estimatedCostScan = scanner.nextLine();
+            if (estimatedCostScan.equalsIgnoreCase("c")) {
+                return false;
+            }
+
+            try {
+                estimatedCost = Double.parseDouble(estimatedCostScan);
+                if (estimatedCost < 0) {
+                    System.err.println("The expected cost amount must be a positive number");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Error: The expected cost amount must be a positive number");
+            }
+        }
+
+        Category category;
+        while (true) {
+            System.out.println("\nPlease select a category by number:");
+
+            Category[] categories = Category.values();
+            for (int i = 0; i < categories.length; i++) {
+                System.out.println((i + 1) + ". " + categories[i].getCategoryName());
+            }
+
+            String input = scanner.nextLine();
+
+            try {
+                int choice = Integer.parseInt(input);
+
+                if (choice >= 1 && choice <= categories.length) {
+                    Category selectedCategory = categories[choice - 1];
+                    System.out.println("You selected: " + selectedCategory.getCategoryName());
+                    category = selectedCategory;
                     break;
                 } else {
-                    System.out.println("Please try again");
+                    System.err.println("Invalid number. Please choose between 1 and " + categories.length + ".");
                 }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid input. Please enter a number.");
             }
+        }
 
-            int quantity;
-            while (true) {
-                System.out.println("\nPlease enter the quantity you wish to add or enter 'c' to cancel");
-                String quantityString = scanner.nextLine();
-                if (quantityString.equals("c")) {
-                    return;
-                }
-
-                try {
-                    quantity = Integer.parseInt(quantityString);
-                    if (quantity <= 0 || quantity > 100) {
-                        throw new NumberFormatException("Quantity should be between 0 and 100");
-                    }
-                    break;
-                } catch (NumberFormatException e) {
-                    System.err.println("Error: The quantity amount must be a number between 0 and 100");
-                }
+        String location;
+        while (true) {
+            System.out.println("\nPlease enter the location of the product you wish to add, or enter 'c' to cancel");
+            location = scanner.nextLine();
+            if (location.equalsIgnoreCase("c")) {
+                return false;
             }
-
-            int expectedQuantity;
-            while (true) {
-                System.out.println("\nPlease enter the expected quantity of the item you wish to add or enter 'c' to cancel");
-                String expectedQuantityString = scanner.nextLine();
-                if (expectedQuantityString.equals("c")) {
-                    return;
-                }
-
-                try {
-                    expectedQuantity = Integer.parseInt(expectedQuantityString);
-                    if (expectedQuantity <= 0 || expectedQuantity > 100) {
-                        throw new NumberFormatException("Quantity should be between 0 and 100");
-                    }
-                    break;
-                } catch (NumberFormatException e) {
-                    System.err.println("Error: The expected quantity amount must be a number between 0 and 100");
-                }
+            if (isValidProductName(location)) {
+                break;
+            } else {
+                System.out.println("Please try again");
             }
+        }
 
-            double estimatedCost;
-            while (true) {
-                System.out.println("\nPlease enter the estimated cost of the item you wish to add or enter 'c' to cancel");
-                String estimatedCostScan = scanner.nextLine();
-                if (estimatedCostScan.equals("c")) {
-                    return;
-                }
-
-                try {
-                    estimatedCost = Double.parseDouble(estimatedCostScan);
-                    if (estimatedCost < 0) {
-                        throw new NumberFormatException("The expected cost amount must be a positive number");
-                    }
-                    break;
-                } catch (NumberFormatException e) {
-                    System.err.println("Error: The expected cost amount must be a positive number");
-                }
-            }
-
-            Category category;
-            while (true) {
-                System.out.println("\nPlease select a category by number:");
-
-                Category[] categories = Category.values();
-                for (int i = 0; i < categories.length; i++) {
-                    System.out.println((i + 1) + ". " + categories[i].getCategoryName());
-                }
-
-                String input = scanner.nextLine();
-
-                try {
-                    int choice = Integer.parseInt(input);
-
-                    if (choice >= 1 && choice <= categories.length) {
-                        Category selectedCategory = categories[choice - 1];
-                        System.out.println("You selected: " + selectedCategory.getCategoryName());
-                        category = selectedCategory;
-                        break;
-                    } else {
-                        System.err.println("Invalid number. Please choose between 1 and " + categories.length + ".");
-                    }
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid input. Please enter a number.");
-                }
-            }
-
-            String location;
-            while (true) {
-                System.out.println("\nPlease enter the location of the product you wish to add, or enter 'c' to cancel");
-                location = scanner.nextLine();
-                if (location.equals("c")) {
-                    return;
-                }
-                if (isValidProductName(location)) {
-                    break;
-                } else {
-                    System.out.println("Please try again");
-                }
-            }
-
+        while (true) {
             System.out.println("Do you want to save this product? (y/n)");
-            String confirm = scanner.nextLine();
+            String confirm = scanner.nextLine().trim();
             if (confirm.equalsIgnoreCase("y")) {
                 Product p = new Product(name, quantity, expectedQuantity, estimatedCost, category, location);
                 products.add(p);
-                System.out.println("Product added successfully.");
+                return true;
+            } else if (confirm.equalsIgnoreCase("n")) {
+                return false;
             } else {
-                System.out.println("Product was not added.");
-            }
-
-            System.out.println("Would you like to add another product? (y/n)");
-            String again = scanner.nextLine();
-            if (!again.equalsIgnoreCase("y")) {
-                break;
+                System.out.println("Invalid input. Please enter 'y' or 'n'.");
             }
         }
     }
 
-    public static void addProductFromFile() {
+    public static boolean addProductFromFile() {
         System.out.println("""
                 Enter the absolute, or relative path of the file you wish to use to load the LMS, without quotations.
                 Absolute Ex. C:\\InventorySystem\\Inventory\\Products\\products.csv
@@ -236,25 +250,25 @@ public class ProductManager {
         String lowerCasePath = filePath.toLowerCase();
         if (!(lowerCasePath.endsWith(".csv") || lowerCasePath.endsWith(".txt"))) {
             System.err.println("Error: Only .csv and .txt files are allowed.");
-            return;
+            return false;
         }
 
         try {
             if (file.length() > 500_000) {
                 System.err.println("Error: File too large. Please upload a smaller product file.");
-                return;
+                return false;
             }
 
             try (Stream<String> lines = Files.lines(file.toPath())) {
                 long lineCount = lines.count();
                 if (lineCount > 100) {
                     System.err.println("Error: File contains too many lines. Please limit your input to 100 products.");
-                    return;
+                    return false;
                 }
             }
         } catch (IOException e) {
             System.err.println("Error reading file for validation: " + e.getMessage());
-            return;
+            return false;
         }
 
         try (Scanner fileScanner = new Scanner(file)) {
@@ -330,12 +344,14 @@ public class ProductManager {
             if (!products.isEmpty()) {
                 System.out.println("\nFile loaded successfully!\nCurrent Products:");
                 viewAllProducts();
+                return true;
             } else {
-                System.out.println("No Products were added.");
+                return false;
             }
 
         } catch (FileNotFoundException e) {
             System.err.println("Error opening file: " + e.getMessage());
+            return false;
         }
     }
 
@@ -387,101 +403,170 @@ public class ProductManager {
         }
     }
 
-    public static void removeProduct(String name) {
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getName().equalsIgnoreCase(name)) {
-                products.remove(i);
-                return;
+    public static boolean removeProduct() {
+        if (!products.isEmpty()) {
+            System.out.println("Please enter the name of the product you wish to remove:");
+            viewAllProducts();
+            String name = scanner.nextLine();
+            for (int i = 0; i < products.size(); i++) {
+                if (products.get(i).getName().equalsIgnoreCase(name)) {
+                    products.remove(i);
+                    return true;
+                }
             }
-        }
 
-        System.err.println("There are no products with the name: " + name + ". Please try again.");
+            System.err.println("There are no products with the name: " + name + ". Please try again.");
+            return false;
+
+        } else {
+            System.out.println("\nThere are no products in the list to remove. Add some now!");
+            return false;
+        }
     }
 
 
-    public static void updateProduct() {
-        System.out.print("Enter the name of the product to update: ");
-        viewAllProducts();
-        String inputName = scanner.nextLine().trim();
+    public static boolean updateProduct() {
 
-        if (!containsProductWithName(inputName)) {
-            System.err.println("No product found with the name: " + inputName);
-            return;
+        if (products.isEmpty()) {
+            System.out.println("\nThere are no products to update. Add some now!");
+            return false;
         }
 
-        Product product = getProductByName(inputName);
+        Product product = null;
 
-        System.out.println("Leave a field blank to keep the current value.");
+        while (product == null) {
+            System.out.print("Enter the name of the product to update, or enter 'c' to cancel\n");
+            viewAllProducts();
+            String inputName = scanner.nextLine().trim();
 
-        System.out.print("New name (" + product.getName() + "): ");
-        String newName = scanner.nextLine().trim();
-        if (!newName.isBlank() && isValidProductName(newName)) {
-            product.setName(newName);
+            if (inputName.equalsIgnoreCase("c")) {
+                return false;
+            }
+
+            if (!containsProductWithName(inputName)) {
+                System.err.println("No product found with the name: " + inputName);
+            } else {
+                product = getProductByName(inputName);
+            }
         }
 
-        System.out.print("New quantity (" + product.getQuantity() + "): ");
-        String quantityInput = scanner.nextLine().trim();
-        if (!quantityInput.isBlank()) {
+
+        System.out.println("\nLeave a field blank to keep the current value.");
+
+        while (true) {
+            System.out.print("New name (" + product.getName() + "): ");
+            String newName = scanner.nextLine().trim();
+
+            if (newName.isBlank()) {
+                break;
+            }
+            if (isValidProductName(newName)) {
+                product.setName(newName);
+                break;
+            }
+        }
+
+        while (true) {
+            System.out.print("New quantity (" + product.getQuantity() + "): ");
+            String quantityInput = scanner.nextLine().trim();
+
+            if (quantityInput.isBlank()) {
+                break;
+            }
+
             try {
                 int newQty = Integer.parseInt(quantityInput);
                 if (newQty > 0 && newQty <= 100) {
                     product.setQuantity(newQty);
+                    break;
                 } else {
-                    System.err.println("Quantity must be between 1 and 100. Skipping.");
+                    System.err.println("Quantity must be between 1 and 100.");
                 }
             } catch (NumberFormatException e) {
-                System.err.println("Invalid number. Skipping quantity update.");
+                System.err.println("Invalid number: " + quantityInput + " Please try again with a valid number.");
             }
         }
 
-        System.out.print("New expected quantity (" + product.getExpectedQuantity() + "): ");
-        String expectedInput = scanner.nextLine().trim();
-        if (!expectedInput.isBlank()) {
+        while (true) {
+            System.out.print("New expected quantity (" + product.getExpectedQuantity() + "): ");
+            String expectedQuantityInput = scanner.nextLine().trim();
+
+            if (expectedQuantityInput.isBlank()) {
+                break;
+            }
+
             try {
-                int newExpected = Integer.parseInt(expectedInput);
+                int newExpected = Integer.parseInt(expectedQuantityInput);
                 if (newExpected > 0 && newExpected <= 100) {
                     product.setExpectedQuantity(newExpected);
+                    break;
                 } else {
-                    System.err.println("Expected quantity must be between 1 and 100. Skipping.");
+                    System.err.println("Expected quantity must be between 1 and 100.");
                 }
             } catch (NumberFormatException e) {
-                System.err.println("Invalid number. Skipping expected quantity update.");
+                System.err.println("Invalid number: " + expectedQuantityInput + " Please try again with a valid number.");
             }
         }
+        while (true) {
+            System.out.print("New estimated cost (" + product.getEstimatedCost() + "): ");
+            String estimatedCostInput = scanner.nextLine().trim();
 
-        System.out.print("New estimated cost (" + product.getEstimatedCost() + "): ");
-        String costInput = scanner.nextLine().trim();
-        if (!costInput.isBlank()) {
+            if (estimatedCostInput.isBlank()) {
+                break;
+            }
             try {
-                double newCost = Double.parseDouble(costInput);
+                double newCost = Double.parseDouble(estimatedCostInput);
                 if (newCost >= 0) {
                     product.setEstimatedCost(newCost);
+                    break;
                 } else {
-                    System.err.println("Estimated cost must be non-negative. Skipping.");
+                    System.err.println("Estimated cost must be non-negative.");
                 }
             } catch (NumberFormatException e) {
-                System.err.println("Invalid number. Skipping cost update.");
+                System.err.println("Invalid number: " + estimatedCostInput + " Please try again with a valid number.");
             }
         }
 
-        System.out.print("New category (" + product.getCategory() + "): ");
-        String catInput = scanner.nextLine().trim();
-        if (!catInput.isBlank()) {
+        while (true) {
+            System.out.println("\nSelect a new category by number, or leave blank to keep current (" + product.getCategory().getCategoryName() + "):");
+
+            Category[] categories = Category.values();
+            for (int i = 0; i < categories.length; i++) {
+                System.out.println((i + 1) + ". " + categories[i].getCategoryName());
+            }
+            String input = scanner.nextLine().trim();
+
+            if (input.isBlank()) {
+                break;
+            }
             try {
-                Category newCategory = Category.valueOf(catInput.toUpperCase());
-                product.setCategory(newCategory);
-            } catch (IllegalArgumentException e) {
-                System.err.println("Invalid category. Skipping category update.");
+                int choice = Integer.parseInt(input);
+                if (choice >= 1 && choice <= categories.length) {
+                    Category selectedCategory = categories[choice - 1];
+                    System.out.println("You selected: " + selectedCategory.getCategoryName());
+                    product.setCategory(selectedCategory);
+                    break;
+                } else {
+                    System.err.println("Invalid number. Please choose between 1 and " + categories.length + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid input. Please enter a number.");
             }
         }
 
-        System.out.print("New location (" + product.getLocation() + "): ");
-        String newLoc = scanner.nextLine().trim();
-        if (!newLoc.isBlank() && isValidProductName(newLoc)) {
-            product.setLocation(newLoc);
-        }
+        while (true) {
+            System.out.print("New location (" + product.getLocation() + "): ");
+            String newLocation = scanner.nextLine().trim();
 
-        System.out.println("Product updated successfully.");
+            if (newLocation.isBlank()) {
+                break;
+            }
+            if (isValidProductName(newLocation)) {
+                product.setLocation(newLocation);
+                break;
+            }
+        }
+        return true;
     }
 
     public static Product getProductByName(String inputName) {
@@ -515,7 +600,6 @@ public class ProductManager {
     }
 
     public static boolean containsProductWithName(String inputName) {
-        //done
         return products.stream()
                 .anyMatch(p -> p.getName().equalsIgnoreCase(inputName));
     }
