@@ -386,7 +386,7 @@ public class ProductManager {
 
     /**
      * method: isValidProductName
-     * parameters: none
+     * parameters: String name
      * return: boolean
      * purpose: this method checks user input strings for product names and
      * locations to ensure they are in the correct format for the IMS
