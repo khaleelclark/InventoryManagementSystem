@@ -1,2 +1,2 @@
-# InventoryManagementSystem-Software-Dev-1
+# InventoryManagementSystem
 DMS Project for Software Development 1
