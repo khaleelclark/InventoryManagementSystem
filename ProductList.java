@@ -1,6 +1,23 @@
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * June 18, 2025
+ * ProductList.java
+ * This class creates a custom ProductList object
+ * that extends ArrayList and has custom crud methods
+ */
+
 import java.util.ArrayList;
 
 public class ProductList extends ArrayList<Product> {
+
+    /**
+     * method: getTotalInventoryEstimate
+     * parameters: none
+     * return: Double
+     * purpose: this method calculates the estimated value of
+     * items in the inventory.
+     */
     public double getTotalInventoryEstimate() {
         if (this.isEmpty()) {
             System.out.println("\nYour estimated value is: $0.00. There are no products in your inventory. Add some products now to calculate your estimated value!");
@@ -15,6 +32,13 @@ public class ProductList extends ArrayList<Product> {
         return total;
     }
 
+    /**
+     * method: getUnderstockedProducts
+     * parameters: none
+     * return: void
+     * purpose: this method returns all products in
+     * the inventory that are below their expected stock
+     */
     public void getUnderstockedProducts() {
         ProductList understockedProducts = new ProductList();
 

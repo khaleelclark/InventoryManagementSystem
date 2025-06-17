@@ -1,3 +1,12 @@
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * June 18, 2025
+ * Category.java
+ * This class creates an enumerator for the user to select
+ * from predetermined categories
+ */
+
 public enum Category {
     FOOD_BEVERAGES("Food & Beverages"),
     PERSONAL_CARE("Personal Care & Toiletries"),
@@ -19,6 +28,12 @@ public enum Category {
         this.categoryName = categoryName;
     }
 
+    /**
+     * method: getCategoryName
+     * parameters: none
+     * return: String
+     * purpose: this method returns name of the category as a string
+     */
     public String getCategoryName() {
         return categoryName;
     }

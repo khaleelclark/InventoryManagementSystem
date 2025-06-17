@@ -7,10 +7,25 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
+
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * June 18, 2025
+ * ProductManager.java
+ * This class creates houses the core logic for the IMS
+ */
 public class ProductManager {
     private static final ProductList products = new ProductList();
     public static Scanner scanner = new Scanner(System.in);
 
+
+    /**
+     * method: startIMS
+     * parameters: none
+     * return: void
+     * purpose: runs the functions of the IMS based off the user's input
+     */
     public static void startIMS() {
         while (true) {
             System.out.println("\nWelcome to Zindel's Inventory Management System!\nPlease enter the number of the option you wish to select\n");
@@ -107,6 +122,137 @@ public class ProductManager {
     }
 
 
+    /**
+     * method: addProductFromFile
+     * parameters: none
+     * return: boolean
+     * purpose: this method prompts the user for the path of the .txt or .csv file
+     * they wish to use to load the IMS, and then it adds the Products to the Product list
+     */
+    public static boolean addProductFromFile() {
+        System.out.println("""
+                Enter the absolute, or relative path of the file you wish to use to load the LMS, without quotations.
+                Absolute Ex. C:\\InventorySystem\\Inventory\\Products\\products.csv
+                Relative Ex. .\\Products\\products.csv""");
+
+        String filePath = scanner.nextLine();
+        File file = new File(filePath);
+
+        String lowerCasePath = filePath.toLowerCase();
+        if (!(lowerCasePath.endsWith(".csv") || lowerCasePath.endsWith(".txt"))) {
+            System.err.println("Error: Only .csv and .txt files are allowed.");
+            return false;
+        }
+
+        try {
+            if (file.length() > 500_000) {
+                System.err.println("Error: File too large. Please upload a smaller product file.");
+                return false;
+            }
+
+            try (Stream<String> lines = Files.lines(file.toPath())) {
+                long lineCount = lines.count();
+                if (lineCount > 100) {
+                    System.err.println("Error: File contains too many lines. Please limit your input to 100 products.");
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file for validation: " + e.getMessage());
+            return false;
+        }
+
+        try (Scanner fileScanner = new Scanner(file)) {
+            int line = 1;
+
+            while (fileScanner.hasNextLine()) {
+                String input = fileScanner.nextLine();
+                String[] columns = input.split(",");
+
+                if (columns.length != 6) {
+                    System.err.println("Error on line " + line + ": Expected 6 columns but found " + columns.length);
+                    line++;
+                    continue;
+                }
+
+                String productName = columns[0].trim();
+                if (!isValidProductName(productName)) {
+                    System.err.println("Error on line " + line + ": Invalid product name '" + productName + "'");
+                    line++;
+                    continue;
+                }
+
+                int quantity, expectedQuantity;
+                double estimatedCost;
+                Category category;
+                String location = columns[5].trim();
+
+                try {
+                    quantity = Integer.parseInt(columns[1].trim());
+                    if (quantity < 0 || quantity > 100) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    System.err.println("Error on line " + line + ": Quantity must be a number between 0 and 100.");
+                    line++;
+                    continue;
+                }
+
+                try {
+                    expectedQuantity = Integer.parseInt(columns[2].trim());
+                    if (expectedQuantity < 0 || expectedQuantity > 100) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    System.err.println("Error on line " + line + ": Expected quantity must be a number between 0 and 100.");
+                    line++;
+                    continue;
+                }
+
+                try {
+                    estimatedCost = Double.parseDouble(columns[3].trim());
+                    if (estimatedCost < 0) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    System.err.println("Error on line " + line + ": Estimated cost must be a positive number.");
+                    line++;
+                    continue;
+                }
+
+                try {
+                    category = Category.valueOf(columns[4].trim().toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Error on line " + line + ": Invalid category '" + columns[4].trim() + "'");
+                    line++;
+                    continue;
+                }
+
+                if (!isValidProductName(location)) {
+                    System.err.println("Error on line " + line + ": Invalid location '" + location + "'");
+                    line++;
+                    continue;
+                }
+
+                products.add(new Product(productName, quantity, expectedQuantity, estimatedCost, category, location));
+                line++;
+            }
+
+            if (!products.isEmpty()) {
+                System.out.println("\nFile loaded successfully!\nCurrent Products:");
+                viewAllProducts();
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Error opening file: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * method: addProductManually
+     * parameters: none
+     * return: boolean
+     * purpose: this method allows the user to manually add a Product to the
+     * product list by inputting a products attributes
+     */
     public static boolean addProductManually() {
         String name;
         while (true) {
@@ -238,124 +384,13 @@ public class ProductManager {
         }
     }
 
-    public static boolean addProductFromFile() {
-        System.out.println("""
-                Enter the absolute, or relative path of the file you wish to use to load the LMS, without quotations.
-                Absolute Ex. C:\\InventorySystem\\Inventory\\Products\\products.csv
-                Relative Ex. .\\Products\\products.csv""");
-
-        String filePath = scanner.nextLine();
-        File file = new File(filePath);
-
-        String lowerCasePath = filePath.toLowerCase();
-        if (!(lowerCasePath.endsWith(".csv") || lowerCasePath.endsWith(".txt"))) {
-            System.err.println("Error: Only .csv and .txt files are allowed.");
-            return false;
-        }
-
-        try {
-            if (file.length() > 500_000) {
-                System.err.println("Error: File too large. Please upload a smaller product file.");
-                return false;
-            }
-
-            try (Stream<String> lines = Files.lines(file.toPath())) {
-                long lineCount = lines.count();
-                if (lineCount > 100) {
-                    System.err.println("Error: File contains too many lines. Please limit your input to 100 products.");
-                    return false;
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading file for validation: " + e.getMessage());
-            return false;
-        }
-
-        try (Scanner fileScanner = new Scanner(file)) {
-            int line = 1;
-
-            while (fileScanner.hasNextLine()) {
-                String input = fileScanner.nextLine();
-                String[] columns = input.split(",");
-
-                if (columns.length != 6) {
-                    System.err.println("Error on line " + line + ": Expected 6 columns but found " + columns.length);
-                    line++;
-                    continue;
-                }
-
-                String productName = columns[0].trim();
-                if (!isValidProductName(productName)) {
-                    System.err.println("Error on line " + line + ": Invalid product name '" + productName + "'");
-                    line++;
-                    continue;
-                }
-
-                int quantity, expectedQuantity;
-                double estimatedCost;
-                Category category;
-                String location = columns[5].trim();
-
-                try {
-                    quantity = Integer.parseInt(columns[1].trim());
-                    if (quantity < 0 || quantity > 100) throw new NumberFormatException();
-                } catch (NumberFormatException e) {
-                    System.err.println("Error on line " + line + ": Quantity must be a number between 0 and 100.");
-                    line++;
-                    continue;
-                }
-
-                try {
-                    expectedQuantity = Integer.parseInt(columns[2].trim());
-                    if (expectedQuantity < 0 || expectedQuantity > 100) throw new NumberFormatException();
-                } catch (NumberFormatException e) {
-                    System.err.println("Error on line " + line + ": Expected quantity must be a number between 0 and 100.");
-                    line++;
-                    continue;
-                }
-
-                try {
-                    estimatedCost = Double.parseDouble(columns[3].trim());
-                    if (estimatedCost < 0) throw new NumberFormatException();
-                } catch (NumberFormatException e) {
-                    System.err.println("Error on line " + line + ": Estimated cost must be a positive number.");
-                    line++;
-                    continue;
-                }
-
-                try {
-                    category = Category.valueOf(columns[4].trim().toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    System.err.println("Error on line " + line + ": Invalid category '" + columns[4].trim() + "'");
-                    line++;
-                    continue;
-                }
-
-                if (!isValidProductName(location)) {
-                    System.err.println("Error on line " + line + ": Invalid location '" + location + "'");
-                    line++;
-                    continue;
-                }
-
-                products.add(new Product(productName, quantity, expectedQuantity, estimatedCost, category, location));
-                line++;
-            }
-
-            if (!products.isEmpty()) {
-                System.out.println("\nFile loaded successfully!\nCurrent Products:");
-                viewAllProducts();
-                return true;
-            } else {
-                return false;
-            }
-
-        } catch (FileNotFoundException e) {
-            System.err.println("Error opening file: " + e.getMessage());
-            return false;
-        }
-    }
-
-
+    /**
+     * method: isValidProductName
+     * parameters: none
+     * return: boolean
+     * purpose: this method checks user input strings for product names and
+     * locations to ensure they are in the correct format for the IMS
+     */
     public static boolean isValidProductName(String name) {
         if (name == null || name.trim().isEmpty()) {
             System.out.println("Error: Product name cannot be empty.");
@@ -381,6 +416,12 @@ public class ProductManager {
         return true;
     }
 
+    /**
+     * method: viewAllProducts
+     * parameters: none
+     * return: void
+     * purpose: this method displays all products in the inventory to the console
+     */
     public static void viewAllProducts() {
         if (products.isEmpty()) {
             System.out.println("\nThere are no products in the list to view. Add some now!");
@@ -392,6 +433,13 @@ public class ProductManager {
         }
     }
 
+    /**
+     * method: isValidProductName
+     * parameters: none
+     * return: void
+     * purpose: this method displays a products name and quantity
+     * for updating products
+     */
     public static void viewAllProductsByNameAndQuantity() {
         if (products.isEmpty()) {
             System.out.println("\nThere are no products in the list to view. Add some now!");
@@ -403,6 +451,13 @@ public class ProductManager {
         }
     }
 
+    /**
+     * method: removeProduct
+     * parameters: none
+     * return: boolean
+     * purpose: this method displays all products then prompts the user to input the name
+     * of the product they would like to remove
+     */
     public static boolean removeProduct() {
         if (!products.isEmpty()) {
             System.out.println("Please enter the name of the product you wish to remove:");
@@ -425,6 +480,13 @@ public class ProductManager {
     }
 
 
+    /**
+     * method: updateProduct
+     * parameters: none
+     * return: boolean
+     * purpose: this method displays all products then prompts the user to input the
+     * fields they would like to update, allowing the user to enter past fields they do not want to change.
+     */
     public static boolean updateProduct() {
 
         if (products.isEmpty()) {
@@ -569,6 +631,12 @@ public class ProductManager {
         return true;
     }
 
+    /**
+     * method: getProductByName
+     * parameters: String inputName
+     * return: Product
+     * purpose: this method returns the product with the name that matches a user's input
+     */
     public static Product getProductByName(String inputName) {
         return products.stream()
                 .filter(p -> p.getName().equalsIgnoreCase(inputName))
@@ -576,7 +644,12 @@ public class ProductManager {
                 .orElse(null);
     }
 
-
+    /**
+     * method: updateProductQuantity
+     * parameters: String productName, int newQuantity
+     * return: boolean
+     * purpose: this method returns the product with the name that matches a user's input
+     */
     public static boolean updateProductQuantity(String productName, int newQuantity) {
         if (!containsProductWithName(productName)) {
             System.err.println("There are no products with the name: " + productName + ". Please try again.");
@@ -595,10 +668,16 @@ public class ProductManager {
                 }
             }
         }
-
         return false;
     }
 
+    /**
+     * method: containsProductWithName
+     * parameters: String inputName
+     * return: Product
+     * purpose: this method verifies that a product with the name the user
+     * inputs exists
+     */
     public static boolean containsProductWithName(String inputName) {
         return products.stream()
                 .anyMatch(p -> p.getName().equalsIgnoreCase(inputName));
