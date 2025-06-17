@@ -22,6 +22,6 @@ value of their entire inventory.
 ## Requirements
 
 * Console or terminal access
-* (Optional) A formatted products.csv file:
+* (Optional) A formatted products.csv or products.txt file:
 
 ``Milk,1,3,2.16,FOOD_BEVERAGES,Fridge``
