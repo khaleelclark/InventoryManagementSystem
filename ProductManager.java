@@ -28,7 +28,7 @@ public class ProductManager {
                 case "1":
                     boolean addProductFromFileSuccessful = addProductFromFile();
                     if (addProductFromFileSuccessful) {
-                        System.out.println("Product added successfully!");
+                        System.out.println("Products added successfully!");
                     } else {
                         System.out.println("No Products were added.");
                     }
@@ -298,18 +298,18 @@ public class ProductManager {
 
                 try {
                     quantity = Integer.parseInt(columns[1].trim());
-                    if (quantity <= 0 || quantity > 100) throw new NumberFormatException();
+                    if (quantity < 0 || quantity > 100) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
-                    System.err.println("Error on line " + line + ": Quantity must be a number between 1 and 100.");
+                    System.err.println("Error on line " + line + ": Quantity must be a number between 0 and 100.");
                     line++;
                     continue;
                 }
 
                 try {
                     expectedQuantity = Integer.parseInt(columns[2].trim());
-                    if (expectedQuantity <= 0 || expectedQuantity > 100) throw new NumberFormatException();
+                    if (expectedQuantity < 0 || expectedQuantity > 100) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
-                    System.err.println("Error on line " + line + ": Expected quantity must be a number between 1 and 100.");
+                    System.err.println("Error on line " + line + ": Expected quantity must be a number between 0 and 100.");
                     line++;
                     continue;
                 }
@@ -372,7 +372,7 @@ public class ProductManager {
             return false;
         }
 
-        if (!name.matches("[a-zA-Z0-9 '\\-()]+")) {
+        if (!name.matches("[a-zA-Z0-9 '\\-().]+")) {
             System.out.println("Error: Product name contains invalid characters.");
             System.out.println("Allowed: letters, numbers, spaces, apostrophes ('), dashes (-), and parentheses");
             return false;
@@ -476,11 +476,11 @@ public class ProductManager {
 
             try {
                 int newQty = Integer.parseInt(quantityInput);
-                if (newQty > 0 && newQty <= 100) {
+                if (newQty >= 0 && newQty <= 100) {
                     product.setQuantity(newQty);
                     break;
                 } else {
-                    System.err.println("Quantity must be between 1 and 100.");
+                    System.err.println("Quantity must be between 0 and 100.");
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Invalid number: " + quantityInput + " Please try again with a valid number.");
@@ -497,11 +497,11 @@ public class ProductManager {
 
             try {
                 int newExpected = Integer.parseInt(expectedQuantityInput);
-                if (newExpected > 0 && newExpected <= 100) {
+                if (newExpected >= 0 && newExpected <= 100) {
                     product.setExpectedQuantity(newExpected);
                     break;
                 } else {
-                    System.err.println("Expected quantity must be between 1 and 100.");
+                    System.err.println("Expected quantity must be between 0 and 100.");
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Invalid number: " + expectedQuantityInput + " Please try again with a valid number.");
