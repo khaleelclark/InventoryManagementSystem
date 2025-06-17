@@ -674,7 +674,7 @@ public class ProductManager {
     /**
      * method: containsProductWithName
      * parameters: String inputName
-     * return: Product
+     * return: boolean
      * purpose: this method verifies that a product with the name the user
      * inputs exists
      */
