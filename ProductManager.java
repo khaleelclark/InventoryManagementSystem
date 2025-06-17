@@ -278,7 +278,7 @@ public class ProductManager {
 
             try {
                 quantity = Integer.parseInt(quantityString);
-                if (quantity <= 0 || quantity > 100) {
+                if (quantity < 0 || quantity > 100) {
                     System.err.println("Quantity should be between 0 and 100");
                     continue;
                 }
@@ -298,7 +298,7 @@ public class ProductManager {
 
             try {
                 expectedQuantity = Integer.parseInt(expectedQuantityString);
-                if (expectedQuantity <= 0 || expectedQuantity > 100) {
+                if (expectedQuantity < 0 || expectedQuantity > 100) {
                     System.err.println("Quantity should be between 0 and 100");
                     continue;
                 }

@@ -5,7 +5,7 @@
  * InventoryManagementSystem.java
  * This application will grant Inventory Management System users the ability
  * to add, remove, display, and update products with robust error handling.
- * Users will also be able to calculate teh total estimated value of their
+ * Users will also be able to calculate the total estimated value of their
  * inventory, and get a list of all products understocked.
  */
 
