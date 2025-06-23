@@ -57,7 +57,10 @@ public class ProductManager {
                     }
                     break;
                 case "3":
-                    viewAllProducts();
+                    boolean view = viewAllProducts();
+                    if (!view) {
+                        System.out.println("\nThere are no products in the list to view. Add some now!");
+                    }
                     break;
                 case "4":
                     boolean removeProduct = removeProduct();
@@ -422,15 +425,16 @@ public class ProductManager {
      * return: void
      * purpose: this method displays all products in the inventory to the console
      */
-    public static void viewAllProducts() {
+    public static boolean viewAllProducts() {
         if (products.isEmpty()) {
-            System.out.println("\nThere are no products in the list to view. Add some now!");
+            return false;
         } else {
+            System.out.println("All products: ");
             for (Product p : products) {
                 System.out.println(p.getProductInformation());
 
             }
-        }
+        } return true;
     }
 
     /**
