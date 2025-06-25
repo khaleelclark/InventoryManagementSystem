@@ -1,0 +1,17 @@
+public class ErrorCodes {
+    // Success
+    public static final int OK = 0;
+
+    // Product name errors
+    public static final int NAME_EMPTY = 1;
+    public static final int NAME_TOO_SHORT = 2;
+    public static final int NAME_TOO_LONG = 3;
+    public static final int NAME_INVALID_CHARACTERS = 4;
+
+    // Quantity errors
+    public static final int QUANTITY_OUT_OF_RANGE = 5;
+
+    // Estimated cost errors
+    public static final int COST_NEGATIVE = 6;
+
+}

@@ -49,7 +49,7 @@ public class ProductManager {
                     }
                     break;
                 case "2":
-                    boolean addProductManuallySuccessful = addProductManually();
+                    boolean addProductManuallySuccessful = addProductManuallyPrompts();
                     if (addProductManuallySuccessful) {
                         System.out.println("Product added successfully!");
                     } else {
@@ -179,8 +179,10 @@ public class ProductManager {
                 }
 
                 String productName = columns[0].trim();
-                if (!isValidProductName(productName)) {
+                int nameCode = isValidProductName(productName);
+                if (nameCode != ErrorCodes.OK) {
                     System.err.println("Error on line " + line + ": Invalid product name '" + productName + "'");
+                    printValidationError(nameCode);
                     line++;
                     continue;
                 }
@@ -192,27 +194,48 @@ public class ProductManager {
 
                 try {
                     quantity = Integer.parseInt(columns[1].trim());
-                    if (quantity < 0 || quantity > 100) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
                     System.err.println("Error on line " + line + ": Quantity must be a number between 0 and 100.");
                     line++;
                     continue;
                 }
 
+                int quantityCode = isValidQuantity(quantity);
+                if (quantityCode != ErrorCodes.OK) {
+                    System.err.print("Error on line " + line + ": ");
+                    printValidationError(quantityCode);
+                    line++;
+                    continue;
+                }
+
                 try {
                     expectedQuantity = Integer.parseInt(columns[2].trim());
-                    if (expectedQuantity < 0 || expectedQuantity > 100) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
                     System.err.println("Error on line " + line + ": Expected quantity must be a number between 0 and 100.");
                     line++;
                     continue;
                 }
 
+                int expectedQuantityCode = isValidQuantity(expectedQuantity);
+                if (expectedQuantityCode != ErrorCodes.OK) {
+                    System.err.print("Error on line " + line + ": ");
+                    printValidationError(expectedQuantityCode);
+                    line++;
+                    continue;
+                }
+
                 try {
                     estimatedCost = Double.parseDouble(columns[3].trim());
-                    if (estimatedCost < 0) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
                     System.err.println("Error on line " + line + ": Estimated cost must be a positive number.");
+                    line++;
+                    continue;
+                }
+
+                int costCode = isValidEstimatedCost(estimatedCost);
+                if (costCode != ErrorCodes.OK) {
+                    System.err.print("Error on line " + line + ": ");
+                    printValidationError(costCode);
                     line++;
                     continue;
                 }
@@ -225,8 +248,10 @@ public class ProductManager {
                     continue;
                 }
 
-                if (!isValidProductName(location)) {
+                int locationCode = isValidProductName(location);
+                if (locationCode != ErrorCodes.OK) {
                     System.err.println("Error on line " + line + ": Invalid location '" + location + "'");
+                    printValidationError(locationCode);
                     line++;
                     continue;
                 }
@@ -236,6 +261,7 @@ public class ProductManager {
             }
 
             if (!products.isEmpty()) {
+                System.out.println("Loaded " + products.size() + " products from file.");
                 System.out.println("\nFile loaded successfully!\nCurrent Products:");
                 viewAllProducts();
                 return true;
@@ -264,11 +290,13 @@ public class ProductManager {
             if (name.equalsIgnoreCase("c")) {
                 return false;
             }
-            if (isValidProductName(name)) {
+            int code = isValidProductName(name);
+            if (code == ErrorCodes.OK) {
                 break;
             } else {
-                System.out.println("Please try again");
+                printValidationError(code);
             }
+
         }
 
         int quantity;
@@ -281,10 +309,12 @@ public class ProductManager {
 
             try {
                 quantity = Integer.parseInt(quantityString);
-                if (!isValidQuantity(quantity)) {
-                    continue;
+                int validationCode = isValidQuantity(quantity);
+                if (validationCode == ErrorCodes.OK) {
+                    break;
+                } else {
+                    printValidationError(validationCode);
                 }
-                break;
             } catch (NumberFormatException e) {
                 System.err.println("Error: The quantity amount must be a number between 0 and 100");
             }
@@ -300,10 +330,12 @@ public class ProductManager {
 
             try {
                 expectedQuantity = Integer.parseInt(expectedQuantityString);
-                if (!isValidQuantity(expectedQuantity)) {
-                    continue;
+                int validationCode = isValidQuantity(expectedQuantity);
+                if (validationCode == ErrorCodes.OK) {
+                    break;
+                } else {
+                    printValidationError(validationCode);
                 }
-                break;
             } catch (NumberFormatException e) {
                 System.err.println("Error: The expected quantity amount must be a number between 0 and 100");
             }
@@ -319,10 +351,12 @@ public class ProductManager {
 
             try {
                 estimatedCost = Double.parseDouble(estimatedCostScan);
-                if (!isValidEstimatedCost(estimatedCost)) {
-                    continue;
+                int validationCode = isValidEstimatedCost(estimatedCost);
+                if (validationCode == ErrorCodes.OK) {
+                    break;
+                } else {
+                    printValidationError(validationCode);
                 }
-                break;
             } catch (NumberFormatException e) {
                 System.err.println("Error: The expected cost amount must be a positive number");
             }
@@ -362,10 +396,12 @@ public class ProductManager {
             if (location.equalsIgnoreCase("c")) {
                 return false;
             }
-            if (isValidProductName(location)) {
+
+            int code = isValidProductName(location);
+            if (code == ErrorCodes.OK) {
                 break;
             } else {
-                System.out.println("Please try again");
+                printValidationError(code);
             }
         }
 
@@ -373,9 +409,12 @@ public class ProductManager {
             System.out.println("Do you want to save this product? (y/n)");
             String confirm = scanner.nextLine().trim();
             if (confirm.equalsIgnoreCase("y")) {
-                Product p = new Product(name, quantity, expectedQuantity, estimatedCost, category, location);
-                products.add(p);
-                return true;
+                int statusCode = addProduct(name, quantity, expectedQuantity, estimatedCost, category, location);
+                if (statusCode == ErrorCodes.OK) {
+                    return true;
+                } else {
+                    printValidationError(statusCode);
+                }
             } else if (confirm.equalsIgnoreCase("n")) {
                 return false;
             } else {
@@ -385,21 +424,18 @@ public class ProductManager {
     }
 
     public static int addProduct(String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location) {
-        if (!isValidProductName(name)) {
-            return 1;
-        }
+        int nameCode = isValidProductName(name);
+        if (nameCode != ErrorCodes.OK) return nameCode;
 
-        if (!isValidQuantity(quantity)) {
-            return 2;
-        }
+        int quantityCode = isValidQuantity(quantity);
+        if (quantityCode != ErrorCodes.OK) return quantityCode;
 
-        if (!isValidEstimatedCost(estimatedCost)) {
-            return 3;
-        }
+        int costCode = isValidEstimatedCost(estimatedCost);
+        if (costCode != ErrorCodes.OK) return costCode;
 
         Product p = new Product(name, quantity, expectedQuantity, estimatedCost, category, location);
         products.add(p);
-        return 0;
+        return ErrorCodes.OK;
     }
 
     /**
@@ -409,46 +445,49 @@ public class ProductManager {
      * purpose: this method checks user input strings for product names and
      * locations to ensure they are in the correct format for the IMS
      */
-    public static boolean isValidProductName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            System.out.println("Error: Product name cannot be empty.");
-            return false;
-        }
-
-        if (name.length() < 2) {
-            System.out.println("Error: Product name must be at least 2 characters long.");
-            return false;
-        }
-
-        if (name.length() > 50) {
-            System.out.println("Error: Product name must be less than 50 characters.");
-            return false;
-        }
-
-        if (!name.matches("[a-zA-Z0-9 '\\-().]+")) {
-            System.out.println("Error: Product name contains invalid characters.");
-            System.out.println("Allowed: letters, numbers, spaces, apostrophes ('), dashes (-), and parentheses");
-            return false;
-        }
-
-        return true;
+    public static int isValidProductName(String name) {
+        if (name == null || name.trim().isEmpty()) return ErrorCodes.NAME_EMPTY;
+        if (name.length() < 2) return ErrorCodes.NAME_TOO_SHORT;
+        if (name.length() > 50) return ErrorCodes.NAME_TOO_LONG;
+        if (!name.matches("[a-zA-Z0-9 '\\-().]+")) return ErrorCodes.NAME_INVALID_CHARACTERS;
+        return ErrorCodes.OK;
     }
 
-    public static boolean isValidQuantity(int quantity) {
-        if (quantity < 0 || quantity > 100) {
-            System.err.println("Error: The quantity amount must be a number between 0 and 100");
-            return false;
-        }
-        return true;
+    public static int isValidQuantity(int quantity) {
+        return (quantity >= 0 && quantity <= 100) ? ErrorCodes.OK : ErrorCodes.QUANTITY_OUT_OF_RANGE;
     }
 
-    public static boolean isValidEstimatedCost(double estimatedCost) {
-        if (estimatedCost < 0) {
-            System.err.println("Error: The expected cost amount must be a positive number");
-            return false;
-        }
-        return true;
+    public static int isValidEstimatedCost(double cost) {
+        return cost >= 0 ? ErrorCodes.OK : ErrorCodes.COST_NEGATIVE;
     }
+
+
+    public static void printValidationError(int code) {
+        switch (code) {
+            case ErrorCodes.NAME_EMPTY:
+                System.err.println("Error: Product name cannot be empty.");
+                break;
+            case ErrorCodes.NAME_TOO_SHORT:
+                System.err.println("Error: Product name must be at least 2 characters long.");
+                break;
+            case ErrorCodes.NAME_TOO_LONG:
+                System.err.println("Error: Product name must be less than 50 characters.");
+                break;
+            case ErrorCodes.NAME_INVALID_CHARACTERS:
+                System.err.println("Error: Product name contains invalid characters.");
+                System.err.println("Allowed: letters, numbers, spaces, apostrophes ('), dashes (-), and parentheses.");
+                break;
+            case ErrorCodes.QUANTITY_OUT_OF_RANGE:
+                System.err.println("Error: Quantity must be between 0 and 100.");
+                break;
+            case ErrorCodes.COST_NEGATIVE:
+                System.err.println("Error: Estimated cost must be a positive number.");
+                break;
+            default:
+                System.err.println("Unknown error. Code: " + code);
+        }
+    }
+
 
     /**
      * method: viewAllProducts
@@ -557,9 +596,12 @@ public class ProductManager {
             if (newName.isBlank()) {
                 break;
             }
-            if (isValidProductName(newName)) {
+            int code = isValidProductName(newName);
+            if (code == ErrorCodes.OK) {
                 product.setName(newName);
                 break;
+            } else {
+                printValidationError(code);
             }
         }
 
@@ -573,11 +615,12 @@ public class ProductManager {
 
             try {
                 int newQty = Integer.parseInt(quantityInput);
-                if (newQty >= 0 && newQty <= 100) {
+                int code = isValidQuantity(newQty);
+                if (code == ErrorCodes.OK) {
                     product.setQuantity(newQty);
                     break;
                 } else {
-                    System.err.println("Quantity must be between 0 and 100.");
+                    printValidationError(code);
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Invalid number: " + quantityInput + " Please try again with a valid number.");
@@ -594,11 +637,12 @@ public class ProductManager {
 
             try {
                 int newExpected = Integer.parseInt(expectedQuantityInput);
-                if (newExpected >= 0 && newExpected <= 100) {
+                int code = isValidQuantity(newExpected);
+                if (code == ErrorCodes.OK) {
                     product.setExpectedQuantity(newExpected);
                     break;
                 } else {
-                    System.err.println("Expected quantity must be between 0 and 100.");
+                    printValidationError(code);
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Invalid number: " + expectedQuantityInput + " Please try again with a valid number.");
@@ -613,11 +657,12 @@ public class ProductManager {
             }
             try {
                 double newCost = Double.parseDouble(estimatedCostInput);
-                if (newCost >= 0) {
+                int code = isValidEstimatedCost(newCost);
+                if (code == ErrorCodes.OK) {
                     product.setEstimatedCost(newCost);
                     break;
                 } else {
-                    System.err.println("Estimated cost must be non-negative.");
+                    printValidationError(code);
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Invalid number: " + estimatedCostInput + " Please try again with a valid number.");
@@ -658,9 +703,12 @@ public class ProductManager {
             if (newLocation.isBlank()) {
                 break;
             }
-            if (isValidProductName(newLocation)) {
+            int code = isValidProductName(newLocation);
+            if (code == ErrorCodes.OK) {
                 product.setLocation(newLocation);
                 break;
+            } else {
+                printValidationError(code);
             }
         }
         return true;
