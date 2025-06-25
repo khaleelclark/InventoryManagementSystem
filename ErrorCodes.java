@@ -14,4 +14,8 @@ public class ErrorCodes {
     // Estimated cost errors
     public static final int COST_NEGATIVE = 6;
 
+    //Removal Errors
+    public static final int NO_PRODUCTS = 7;
+    public static final int NOT_FOUND = 8;
+
 }

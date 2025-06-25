@@ -63,13 +63,7 @@ public class ProductManager {
                     }
                     break;
                 case "4":
-                    boolean removeProduct = removeProduct();
-                    if (removeProduct) {
-                        System.out.println("Product removed successfully!");
-                        viewAllProducts();
-                    } else {
-                        System.out.println("No Products were removed.");
-                    }
+                    removeProduct();
                     break;
                 case "5":
                     boolean updateProduct = updateProduct();
@@ -256,8 +250,12 @@ public class ProductManager {
                     continue;
                 }
 
-                products.add(new Product(productName, quantity, expectedQuantity, estimatedCost, category, location));
-                line++;
+                int statusCode = addProduct(productName, quantity, expectedQuantity, estimatedCost, category, location);
+                if (statusCode != ErrorCodes.OK) {
+                    System.err.print("Error on line " + line + ": ");
+                    printValidationError(statusCode);
+                    line++;
+                }
             }
 
             if (!products.isEmpty()) {
@@ -532,26 +530,47 @@ public class ProductManager {
      * purpose: this method displays all products then prompts the user to input the name
      * of the product they would like to remove
      */
-    public static boolean removeProduct() {
-        if (!products.isEmpty()) {
-            System.out.println("Please enter the name of the product you wish to remove:");
-            viewAllProducts();
-            String name = scanner.nextLine();
-            for (int i = 0; i < products.size(); i++) {
-                if (products.get(i).getName().equalsIgnoreCase(name)) {
-                    products.remove(i);
-                    return true;
-                }
-            }
-
-            System.err.println("There are no products with the name: " + name + ". Please try again.");
-            return false;
-
-        } else {
-            System.out.println("\nThere are no products in the list to remove. Add some now!");
-            return false;
+    public static void removeProduct() {
+        if (products.isEmpty()) {
+            return;
         }
+
+        System.out.println("Please enter the name of the product you wish to remove:");
+        viewAllProducts();
+        String name = scanner.nextLine().trim();
+
+        int result = removeProductByName(name);
+
+        switch (result) {
+            case ErrorCodes.OK -> {
+                System.out.println("Product '" + name + "' removed successfully.");
+            }
+            case ErrorCodes.NOT_FOUND -> {
+                System.err.println("There are no products with the name: " + name + ". Please try again.");
+            }
+            case ErrorCodes.NO_PRODUCTS -> {
+                System.err.println("No products available to remove.");
+            }
+            default -> {
+                System.err.println("Unknown error occurred.");}
+        }
+
     }
+
+
+    public static int removeProductByName(String name) {
+        if (products.isEmpty()) {
+            return ErrorCodes.NO_PRODUCTS;
+        }
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getName().equalsIgnoreCase(name)) {
+                products.remove(i);
+                return ErrorCodes.OK;
+            }
+        }
+        return ErrorCodes.NOT_FOUND;
+    }
+
 
 
     /**
