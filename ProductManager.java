@@ -256,7 +256,7 @@ public class ProductManager {
      * purpose: this method allows the user to manually add a Product to the
      * product list by inputting a products attributes
      */
-    public static boolean addProductManually() {
+    public static boolean addProductManuallyPrompts() {
         String name;
         while (true) {
             System.out.println("\nPlease enter the name of the product you wish to add or enter 'c' to cancel");
@@ -281,8 +281,7 @@ public class ProductManager {
 
             try {
                 quantity = Integer.parseInt(quantityString);
-                if (quantity < 0 || quantity > 100) {
-                    System.err.println("Quantity should be between 0 and 100");
+                if (!isValidQuantity(quantity)) {
                     continue;
                 }
                 break;
@@ -301,8 +300,7 @@ public class ProductManager {
 
             try {
                 expectedQuantity = Integer.parseInt(expectedQuantityString);
-                if (expectedQuantity < 0 || expectedQuantity > 100) {
-                    System.err.println("Quantity should be between 0 and 100");
+                if (!isValidQuantity(expectedQuantity)) {
                     continue;
                 }
                 break;
@@ -321,8 +319,7 @@ public class ProductManager {
 
             try {
                 estimatedCost = Double.parseDouble(estimatedCostScan);
-                if (estimatedCost < 0) {
-                    System.err.println("The expected cost amount must be a positive number");
+                if (!isValidEstimatedCost(estimatedCost)) {
                     continue;
                 }
                 break;
@@ -387,6 +384,24 @@ public class ProductManager {
         }
     }
 
+    public static int addProduct(String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location) {
+        if (!isValidProductName(name)) {
+            return 1;
+        }
+
+        if (!isValidQuantity(quantity)) {
+            return 2;
+        }
+
+        if (!isValidEstimatedCost(estimatedCost)) {
+            return 3;
+        }
+
+        Product p = new Product(name, quantity, expectedQuantity, estimatedCost, category, location);
+        products.add(p);
+        return 0;
+    }
+
     /**
      * method: isValidProductName
      * parameters: String name
@@ -416,6 +431,22 @@ public class ProductManager {
             return false;
         }
 
+        return true;
+    }
+
+    public static boolean isValidQuantity(int quantity) {
+        if (quantity < 0 || quantity > 100) {
+            System.err.println("Error: The quantity amount must be a number between 0 and 100");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isValidEstimatedCost(double estimatedCost) {
+        if (estimatedCost < 0) {
+            System.err.println("Error: The expected cost amount must be a positive number");
+            return false;
+        }
         return true;
     }
 
