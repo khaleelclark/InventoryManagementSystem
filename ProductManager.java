@@ -92,7 +92,7 @@ public class ProductManager {
                     if (updated) {
                         System.out.println("Product quantity updated.");
                     } else {
-                        System.out.println("Product not found.");
+                        System.out.println("Product not updated.");
                     }
                     break;
                 }
@@ -277,8 +277,9 @@ public class ProductManager {
      * method: addProductManually
      * parameters: none
      * return: boolean
-     * purpose: this method allows the user to manually add a Product to the
-     * product list by inputting a products attributes
+     * purpose: this method handles the ui to allows the user to manually add a Product to the
+     * product list by inputting a products attributes, and call the add product
+     * method to add the product.
      */
     public static boolean addProductManuallyPrompts() {
         String name;
@@ -421,6 +422,12 @@ public class ProductManager {
         }
     }
 
+    /**
+     * method: addProduct
+     * parameters: String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location
+     * return: int
+     * purpose: this method holds the business logic for adding a product.
+     */
     public static int addProduct(String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location) {
         int nameCode = isValidProductName(name);
         if (nameCode != ErrorCodes.OK) return nameCode;
@@ -451,15 +458,36 @@ public class ProductManager {
         return ErrorCodes.OK;
     }
 
+    /**
+     * method: isValidQuantity
+     * parameters: int quantity
+     * return: int
+     * purpose: this method verifies user inputted quantity and estimated quantity
+     * aligns with the business rules for the application.
+     */
     public static int isValidQuantity(int quantity) {
         return (quantity >= 0 && quantity <= 100) ? ErrorCodes.OK : ErrorCodes.QUANTITY_OUT_OF_RANGE;
     }
 
+    /**
+     * method: isValidEstimatedCost
+     * parameters: double cost
+     * return: int
+     * purpose: this method verifies user inputted cost aligns with the
+     * business rules for the application.
+     */
     public static int isValidEstimatedCost(double cost) {
         return cost >= 0 ? ErrorCodes.OK : ErrorCodes.COST_NEGATIVE;
     }
 
 
+    /**
+     * method: printValidationError
+     * parameters: none
+     * return: void
+     * purpose: this method displays error messages based off
+     * of corresponding codes defined in the ErrorCodes class.
+     */
     public static void printValidationError(int code) {
         switch (code) {
             case ErrorCodes.NAME_EMPTY:
@@ -480,6 +508,12 @@ public class ProductManager {
                 break;
             case ErrorCodes.COST_NEGATIVE:
                 System.err.println("Error: Estimated cost must be a positive number.");
+                break;
+            case ErrorCodes.NOT_FOUND:
+                System.err.println("Error: Name not found.");
+                break;
+            case ErrorCodes.NOT_UPDATED:
+                System.out.println("Product Not Updated.");
                 break;
             default:
                 System.err.println("Unknown error. Code: " + code);
@@ -526,9 +560,9 @@ public class ProductManager {
     /**
      * method: removeProduct
      * parameters: none
-     * return: boolean
-     * purpose: this method displays all products then prompts the user to input the name
-     * of the product they would like to remove
+     * return: void
+     * purpose: this method holds the ui logic for removing a product
+     * then calls the remove product by name method for removal.
      */
     public static void removeProduct() {
         if (products.isEmpty()) {
@@ -558,6 +592,12 @@ public class ProductManager {
     }
 
 
+    /**
+     * method: removeProductByName
+     * parameters: String name
+     * return: int
+     * purpose: this method holds the business logic for removing products
+     */
     public static int removeProductByName(String name) {
         if (products.isEmpty()) {
             return ErrorCodes.NO_PRODUCTS;
@@ -733,6 +773,7 @@ public class ProductManager {
         return true;
     }
 
+
     /**
      * method: getProductByName
      * parameters: String inputName
@@ -750,7 +791,8 @@ public class ProductManager {
      * method: updateProductQuantity
      * parameters: String productName, int newQuantity
      * return: boolean
-     * purpose: this method returns the product with the name that matches a user's input
+     * purpose: this method holds the ui logic to prompt the user for a product name
+     * to update its quantity.
      */
     public static boolean updateProductQuantity(String productName, int newQuantity) {
         if (!containsProductWithName(productName)) {
@@ -763,14 +805,42 @@ public class ProductManager {
                 String confirm = scanner.nextLine();
 
                 if (confirm.equalsIgnoreCase("y")) {
-                    p.setQuantity(newQuantity);
-                    return true;
-                } else {
+                    int result = updateProductQuantityDirectly(productName, newQuantity);
+                    if (result == ErrorCodes.OK) {
+                        return true;
+                    } else {
+                        printValidationError(result);
+                    }
+                } else if (confirm.equalsIgnoreCase("n")) {
                     return false;
+                } else {
+                    System.out.println("Invalid input. Please enter 'y' or 'n'.");
                 }
             }
         }
         return false;
+
+    }
+
+    /**
+     * method: updateProductQuantityDirectly
+     * parameters: String productName, int newQuantity
+     * return: int
+     * purpose: this method holds the business logic for updating product quantities.
+     */
+    public static int updateProductQuantityDirectly(String productName, int newQuantity) {
+        if (!containsProductWithName(productName)) {
+            return ErrorCodes.NOT_FOUND;
+        }
+        for (Product p : products) {
+            if (p.getName().equalsIgnoreCase(productName)) {
+                int code = isValidQuantity(newQuantity);
+                if (code != ErrorCodes.OK) return code;
+                p.setQuantity(newQuantity);
+                return ErrorCodes.OK;
+            }
+        }
+        return ErrorCodes.NOT_UPDATED;
     }
 
     /**

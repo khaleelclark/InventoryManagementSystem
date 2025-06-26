@@ -17,5 +17,6 @@ public class ErrorCodes {
     //Removal Errors
     public static final int NO_PRODUCTS = 7;
     public static final int NOT_FOUND = 8;
+    public static final int NOT_UPDATED = 9;
 
 }
