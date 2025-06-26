@@ -638,10 +638,10 @@ public class ProductManager {
                 return false;
             }
 
-            if (!containsProductWithName(inputName)) {
+            if (!containsProductWithName(inputName, products)) {
                 System.err.println("No product found with the name: " + inputName);
             } else {
-                product = getProductByName(inputName);
+                product = getProductByName(products, inputName);
             }
         }
 
@@ -780,8 +780,8 @@ public class ProductManager {
      * return: Product
      * purpose: this method returns the product with the name that matches a user's input
      */
-    public static Product getProductByName(String inputName) {
-        return products.stream()
+    public static Product getProductByName(ProductList productList, String inputName) {
+        return productList.stream()
                 .filter(p -> p.getName().equalsIgnoreCase(inputName))
                 .findFirst()
                 .orElse(null);
@@ -795,7 +795,7 @@ public class ProductManager {
      * to update its quantity.
      */
     public static boolean updateProductQuantity(String productName, int newQuantity) {
-        if (!containsProductWithName(productName)) {
+        if (!containsProductWithName(productName, products)) {
             System.err.println("There are no products with the name: " + productName + ". Please try again.");
             return false;
         }
@@ -829,7 +829,7 @@ public class ProductManager {
      * purpose: this method holds the business logic for updating product quantities.
      */
     public static int updateProductQuantityDirectly(String productName, int newQuantity) {
-        if (!containsProductWithName(productName)) {
+        if (!containsProductWithName(productName, products)) {
             return ErrorCodes.NOT_FOUND;
         }
         for (Product p : products) {
@@ -850,7 +850,7 @@ public class ProductManager {
      * purpose: this method verifies that a product with the name the user
      * inputs exists
      */
-    public static boolean containsProductWithName(String inputName) {
+    public static boolean containsProductWithName(String inputName, ProductList products) {
         return products.stream()
                 .anyMatch(p -> p.getName().equalsIgnoreCase(inputName));
     }
