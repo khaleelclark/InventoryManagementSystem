@@ -22,9 +22,4 @@ class ProductListTest {
         double total = productList.getTotalInventoryEstimate();
         assertEquals(11.96, total);
     }
-
-    @Test
-    @DisplayName("Get Understocked Products")
-    void getUnderstockedProducts() {
-    }
 }
