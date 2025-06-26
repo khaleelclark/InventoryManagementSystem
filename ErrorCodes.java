@@ -1,3 +1,12 @@
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * June 25, 2025
+ * ErrorCodes.java
+ * This class holds all of the error code references to be handled
+ * by methods to output the correct error message.
+ *
+ */
 public class ErrorCodes {
     // Success
     public static final int OK = 0;

@@ -65,8 +65,11 @@ class ProductManagerTests {
     @Test
     @DisplayName("Remove product by name")
     void removeProductByName() {
-        int successCode = ProductManager.removeProductByName("Milk");
+        int successCode = ProductManager.removeProductByName("Bread", productList);
         assertEquals(0, successCode);
+
+        int failureCode = ProductManager.removeProductByName("Television", productList);
+        assertEquals(8, failureCode);
     }
 
     @Test
@@ -75,13 +78,18 @@ class ProductManagerTests {
         Product success = ProductManager.getProductByName(productList, "eggs");
         assertEquals(m, success);
 
+        Product failure = ProductManager.getProductByName(productList, "Charger");
+        assertNull(failure);
     }
 
     @Test
     @DisplayName("Update quantity directly")
     void updateProductQuantityDirectly() {
-        int success = ProductManager.updateProductQuantityDirectly("Eggs", 3);
-        assertEquals(8,success);
+        int success = ProductManager.updateProductQuantityDirectly("Eggs", 3, productList);
+        assertEquals(0,success);
+
+        int failure = ProductManager.updateProductQuantityDirectly("Laptop", 3, productList);
+        assertEquals(8, failure);
     }
 
     @Test
@@ -90,5 +98,9 @@ class ProductManagerTests {
         String name = "eggs";
         boolean success = ProductManager.containsProductWithName(name, productList);
         assertTrue(success);
+
+        String badName = "Chocolate";
+        boolean failure = ProductManager.containsProductWithName(badName, productList);
+        assertFalse(failure);
     }
 }

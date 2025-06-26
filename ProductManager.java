@@ -573,7 +573,7 @@ public class ProductManager {
         viewAllProducts();
         String name = scanner.nextLine().trim();
 
-        int result = removeProductByName(name);
+        int result = removeProductByName(name, products);
 
         switch (result) {
             case ErrorCodes.OK -> {
@@ -598,13 +598,13 @@ public class ProductManager {
      * return: int
      * purpose: this method holds the business logic for removing products
      */
-    public static int removeProductByName(String name) {
-        if (products.isEmpty()) {
+    public static int removeProductByName(String name, ProductList productList) {
+        if (productList.isEmpty()) {
             return ErrorCodes.NO_PRODUCTS;
         }
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getName().equalsIgnoreCase(name)) {
-                products.remove(i);
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getName().equalsIgnoreCase(name)) {
+                productList.remove(i);
                 return ErrorCodes.OK;
             }
         }
@@ -805,7 +805,7 @@ public class ProductManager {
                 String confirm = scanner.nextLine();
 
                 if (confirm.equalsIgnoreCase("y")) {
-                    int result = updateProductQuantityDirectly(productName, newQuantity);
+                    int result = updateProductQuantityDirectly(productName, newQuantity, products);
                     if (result == ErrorCodes.OK) {
                         return true;
                     } else {
@@ -828,11 +828,11 @@ public class ProductManager {
      * return: int
      * purpose: this method holds the business logic for updating product quantities.
      */
-    public static int updateProductQuantityDirectly(String productName, int newQuantity) {
-        if (!containsProductWithName(productName, products)) {
+    public static int updateProductQuantityDirectly(String productName, int newQuantity, ProductList productList) {
+        if (!containsProductWithName(productName, productList)) {
             return ErrorCodes.NOT_FOUND;
         }
-        for (Product p : products) {
+        for (Product p : productList) {
             if (p.getName().equalsIgnoreCase(productName)) {
                 int code = isValidQuantity(newQuantity);
                 if (code != ErrorCodes.OK) return code;
