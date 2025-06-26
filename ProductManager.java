@@ -274,7 +274,7 @@ public class ProductManager {
     }
 
     /**
-     * method: addProductManually
+     * method: addProductManuallyPrompts
      * parameters: none
      * return: boolean
      * purpose: this method handles the ui to allows the user to manually add a Product to the
