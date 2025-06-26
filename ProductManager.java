@@ -125,6 +125,7 @@ public class ProductManager {
      * return: boolean
      * purpose: this method prompts the user for the path of the .txt or .csv file
      * they wish to use to load the IMS, and then it adds the Products to the Product list
+     * using the addProduct method.
      */
     public static boolean addProductFromFile() {
         System.out.println("""
@@ -272,6 +273,7 @@ public class ProductManager {
             return false;
         }
     }
+
 
     /**
      * method: addProductManuallyPrompts
