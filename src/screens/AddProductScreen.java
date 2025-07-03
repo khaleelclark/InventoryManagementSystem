@@ -1,17 +1,21 @@
-package src;
+package src.screens;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
+import src.ScreenController;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import src.Category;
+import src.Product;
+import src.ProductManager;
+import src.ErrorCodes;
 
-public class IMSApp extends Application {
+public class AddProductScreen {
+    private ScreenController controller;
+    private VBox layout;
 
-    @Override
-    public void start(Stage stage) {
-        stage.setTitle("Inventory Management System");
+    public AddProductScreen(ScreenController controller) {
+        this.controller = controller;
 
         Label title = new Label("Add Product");
 
@@ -35,6 +39,8 @@ public class IMSApp extends Application {
         locationField.setPromptText("Location");
 
         Button addButton = new Button("Add Product");
+        Button backButton = new Button("Back to Home");
+
         Label resultLabel = new Label();
 
         TableView<Product> productTable = new TableView<>();
@@ -60,8 +66,8 @@ public class IMSApp extends Application {
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         productTable.setPrefHeight(200);
-        productTable.getColumns().clear();
         productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
+        productTable.getItems().setAll(ProductManager.getProducts());
 
         addButton.setOnAction(_ -> {
             try {
@@ -77,9 +83,7 @@ public class IMSApp extends Application {
                     return;
                 }
 
-                int result = ProductManager.addProduct(name, qty, expectedQty, cost,
-                        selectedCategory, location);
-
+                int result = ProductManager.addProduct(name, qty, expectedQty, cost, selectedCategory, location);
                 productTable.getItems().setAll(ProductManager.getProducts());
 
                 if (result == ErrorCodes.OK) {
@@ -99,18 +103,19 @@ public class IMSApp extends Application {
             }
         });
 
-        VBox layout = new VBox(10,
+        backButton.setOnAction(e -> controller.activate("home"));
+
+        layout = new VBox(10,
                 title, nameField, qtyField, expectedQtyField,
                 costField, categoryComboBox, locationField,
-                addButton, resultLabel,
+                addButton, resultLabel, backButton,
                 new Label("Current Products:"), productTable);
 
         layout.setStyle("-fx-padding: 20;");
-        stage.setScene(new Scene(layout, 600, 600)); // Made taller for table
-        stage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public Parent getView() {
+        return layout;
     }
 }
+
