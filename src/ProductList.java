@@ -6,6 +6,7 @@
  * This class creates a custom ProductList object
  * that extends ArrayList and has custom crud methods
  */
+package src;
 
 import java.util.ArrayList;
 

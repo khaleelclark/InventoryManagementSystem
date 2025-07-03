@@ -1,6 +1,12 @@
+package src.tests;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import src.Category;
+import src.Product;
+import src.ProductList;
+import src.ProductManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,8 +19,8 @@ class ProductManagerTests {
     @BeforeEach
     void setUp() {
         productList = new ProductList();
-        p = new Product("Bread", 2,2,1.09,Category.FOOD_BEVERAGES,"Pantry");
-        m = new Product("Eggs", 2,4,3.05,Category.FOOD_BEVERAGES,"Fridge");
+        p = new Product("Bread", 2, 2, 1.09, Category.FOOD_BEVERAGES, "Pantry");
+        m = new Product("Eggs", 2, 4, 3.05, Category.FOOD_BEVERAGES, "Fridge");
         productList.add(p);
         productList.add(m);
     }
@@ -22,7 +28,7 @@ class ProductManagerTests {
     @Test
     @DisplayName("Add Product")
     void addProduct() {
-        int successCode = ProductManager.addProduct("Milk", 1,2,2.09,Category.FOOD_BEVERAGES,"Fridge");
+        int successCode = ProductManager.addProduct("Milk", 1, 2, 2.09, Category.FOOD_BEVERAGES, "Fridge");
         assertEquals(0, successCode);
     }
 
@@ -86,7 +92,7 @@ class ProductManagerTests {
     @DisplayName("Update quantity directly")
     void updateProductQuantityDirectly() {
         int success = ProductManager.updateProductQuantityDirectly("Eggs", 3, productList);
-        assertEquals(0,success);
+        assertEquals(0, success);
 
         int failure = ProductManager.updateProductQuantityDirectly("Laptop", 3, productList);
         assertEquals(8, failure);

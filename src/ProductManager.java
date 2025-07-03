@@ -1,3 +1,5 @@
+package src;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -579,20 +581,12 @@ public class ProductManager {
         int result = removeProductByName(name, products);
 
         switch (result) {
-            case ErrorCodes.OK -> {
-                System.out.println("Product '" + name + "' removed successfully.");
-            }
-            case ErrorCodes.NOT_FOUND -> {
-                System.err.println("There are no products with the name: " + name + ". Please try again.");
-            }
-            case ErrorCodes.NO_PRODUCTS -> {
-                System.err.println("No products available to remove.");
-            }
-            default -> {
-                System.err.println("Unknown error occurred.");
-            }
+            case ErrorCodes.OK -> System.out.println("Product '" + name + "' removed successfully.");
+            case ErrorCodes.NOT_FOUND ->
+                    System.err.println("There are no products with the name: " + name + ". Please try again.");
+            case ErrorCodes.NO_PRODUCTS -> System.err.println("No products available to remove.");
+            default -> System.err.println("Unknown error occurred.");
         }
-
     }
 
 
