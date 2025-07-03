@@ -538,7 +538,8 @@ public class ProductManager {
                 System.out.println(p.getProductInformation());
 
             }
-        } return true;
+        }
+        return true;
     }
 
     /**
@@ -588,7 +589,8 @@ public class ProductManager {
                 System.err.println("No products available to remove.");
             }
             default -> {
-                System.err.println("Unknown error occurred.");}
+                System.err.println("Unknown error occurred.");
+            }
         }
 
     }
@@ -612,7 +614,6 @@ public class ProductManager {
         }
         return ErrorCodes.NOT_FOUND;
     }
-
 
 
     /**
@@ -856,4 +857,9 @@ public class ProductManager {
         return products.stream()
                 .anyMatch(p -> p.getName().equalsIgnoreCase(inputName));
     }
+
+    public static ProductList getProducts() {
+        return products;
+    }
+
 }
