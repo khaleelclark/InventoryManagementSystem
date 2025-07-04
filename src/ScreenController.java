@@ -20,9 +20,9 @@ public class ScreenController {
             case "add":
                 stage.setScene(new Scene(new AddProductScreen(this).getView(), 600, 600));
                 break;
-//            case "view":
-//                stage.setScene(new Scene(new ViewProductsScreen(this).getView(), 600, 400));
-//                break;
+            case "view":
+                stage.setScene(new Scene(new ViewProductsScreen(this).getView(), 600, 400));
+                break;
 //            case "update":
 //                stage.setScene(new Scene(new UpdateProductScreen(this).getView(), 600, 600));
 //                break;
