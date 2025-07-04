@@ -4,7 +4,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import src.Category;
 import src.Product;
 import src.ProductManager;
 import src.ScreenController;

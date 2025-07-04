@@ -23,12 +23,12 @@ public class ScreenController {
             case "view":
                 stage.setScene(new Scene(new ViewProductsScreen(this).getView(), 600, 400));
                 break;
-//            case "update":
-//                stage.setScene(new Scene(new UpdateProductScreen(this).getView(), 600, 600));
-//                break;
-//            case "remove":
-//                stage.setScene(new Scene(new RemoveProductScreen(this).getView(), 600, 400));
-//                break;
+            case "update":
+                stage.setScene(new Scene(new UpdateProductScreen(this).getView(), 600, 600));
+                break;
+            case "remove":
+                stage.setScene(new Scene(new RemoveProductScreen(this).getView(), 600, 400));
+                break;
             default:
                 throw new IllegalArgumentException("Unknown screen: " + screenName);
         }
