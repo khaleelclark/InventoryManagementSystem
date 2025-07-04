@@ -1,6 +1,7 @@
 package src.screens;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import src.ProductManager;
 import src.ScreenController;
 import javafx.scene.control.Button;
@@ -26,7 +27,16 @@ public class HomeScreen {
         viewButton.setOnAction(e -> controller.activate("view"));
         updateButton.setOnAction(e -> controller.activate("update"));
         removeButton.setOnAction(e -> controller.activate("remove"));
-        calculateInvEstimateButton.setOnAction(e -> ProductManager.getProducts().getTotalInventoryEstimate());
+        calculateInvEstimateButton.setOnAction(e -> {
+
+            double totalEstimate = ProductManager.getProducts().getTotalInventoryEstimate();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Inventory Estimate");
+            alert.setHeaderText("Total Inventory Value");
+            alert.setContentText("Your estimated inventory value is: $" + String.format("%.2f", totalEstimate));
+
+            alert.showAndWait();
+        });
 
         layout.getChildren().addAll(addButton, viewButton, updateButton, removeButton, updateQuantityButton, calculateInvEstimateButton, understockedProductsButton);
     }
