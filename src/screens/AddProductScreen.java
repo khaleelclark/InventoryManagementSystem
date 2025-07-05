@@ -38,7 +38,7 @@ public class AddProductScreen {
         form.setPadding(new Insets(10));
         form.addRow(0, new Label("Name:"), nameField);
         form.addRow(1, new Label("Quantity:"), qtyField);
-        form.addRow(2, new Label("Expected Qty:"), expectedQtyField);
+        form.addRow(2, new Label("Expected Quantity:"), expectedQtyField);
         form.addRow(3, new Label("Estimated Cost:"), costField);
         form.addRow(4, new Label("Category:"), categoryBox);
         form.addRow(5, new Label("Location:"), locationField);
