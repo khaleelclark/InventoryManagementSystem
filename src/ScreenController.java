@@ -1,4 +1,3 @@
-// src/ScreenController.java
 package src;
 
 import javafx.scene.Scene;
@@ -6,7 +5,7 @@ import javafx.stage.Stage;
 import src.screens.*;
 
 public class ScreenController {
-    private Stage stage;
+    private final Stage stage;
 
     public ScreenController(Stage stage) {
         this.stage = stage;
@@ -28,6 +27,9 @@ public class ScreenController {
                 break;
             case "remove":
                 stage.setScene(new Scene(new RemoveProductScreen(this).getView(), 600, 400));
+                break;
+            case "understocked":
+                stage.setScene(new Scene(new UnderstockedProductsScreen(this).getView(), 600, 400));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown screen: " + screenName);

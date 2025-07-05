@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 
 public class HomeScreen {
     private ScreenController controller;
-    private VBox layout;
+    private final VBox layout;
 
     public HomeScreen(ScreenController controller) {
         this.controller = controller;
@@ -23,11 +23,12 @@ public class HomeScreen {
         Button calculateInvEstimateButton = new Button("Calculate Inventory Estimate");
         Button understockedProductsButton = new Button("Understocked Products");
 
-        addButton.setOnAction(e -> controller.activate("add"));
-        viewButton.setOnAction(e -> controller.activate("view"));
-        updateButton.setOnAction(e -> controller.activate("update"));
-        removeButton.setOnAction(e -> controller.activate("remove"));
-        calculateInvEstimateButton.setOnAction(e -> {
+        addButton.setOnAction(_ -> controller.activate("add"));
+        viewButton.setOnAction(_ -> controller.activate("view"));
+        updateButton.setOnAction(_ -> controller.activate("update"));
+        removeButton.setOnAction(_ -> controller.activate("remove"));
+        understockedProductsButton.setOnAction(_ -> controller.activate("understocked"));
+        calculateInvEstimateButton.setOnAction(_ -> {
 
             double totalEstimate = ProductManager.getProducts().getTotalInventoryEstimate();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -38,7 +39,7 @@ public class HomeScreen {
             alert.showAndWait();
         });
 
-        layout.getChildren().addAll(addButton, viewButton, updateButton, removeButton, updateQuantityButton, calculateInvEstimateButton, understockedProductsButton);
+        layout.getChildren().addAll(addButton, viewButton, updateButton, removeButton, updateQuantityButton, understockedProductsButton, calculateInvEstimateButton);
     }
 
     public Parent getView() {

@@ -1,4 +1,3 @@
-// src/Main.java
 package src;
 
 import javafx.application.Application;
@@ -9,7 +8,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         ScreenController controller = new ScreenController(primaryStage);
-        controller.activate("home");  // Show the Home screen first
+        controller.activate("home");
     }
 
     public static void main(String[] args) {

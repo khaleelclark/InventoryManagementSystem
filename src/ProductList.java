@@ -38,12 +38,12 @@ public class ProductList extends ArrayList<Product> {
      * purpose: this method returns all products in
      * the inventory that are below their expected stock
      */
-    public void getUnderstockedProducts() {
+    public ProductList getUnderstockedProducts() {
         ProductList understockedProducts = new ProductList();
 
         if (this.isEmpty()) {
             System.out.println("No products in inventory.");
-            return;
+            return understockedProducts;
         }
 
         for (Product p : this) {
@@ -60,6 +60,7 @@ public class ProductList extends ArrayList<Product> {
                 System.out.println(p.getQuantityInformation());
             }
         }
+        return understockedProducts;
     }
 
 }

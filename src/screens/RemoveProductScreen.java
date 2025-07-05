@@ -7,7 +7,7 @@ import src.ScreenController;
 
 public class RemoveProductScreen {
     private ScreenController controller;
-    private VBox layout;
+    private final VBox layout;
 
     public RemoveProductScreen(ScreenController controller) {
         this.controller = controller;
@@ -16,7 +16,7 @@ public class RemoveProductScreen {
         Label description = new Label("This is the Remove product screen");
 
         Button backButton = new Button("Back to Home");
-        backButton.setOnAction(e -> controller.activate("home"));
+        backButton.setOnAction(_ -> controller.activate("home"));
 
         layout = new VBox(10, title, description, backButton);
         layout.setStyle("-fx-padding: 20;");

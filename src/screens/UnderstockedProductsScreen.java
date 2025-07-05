@@ -1,22 +1,24 @@
 package src.screens;
 
-import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import src.Product;
+import src.ProductList;
 import src.ProductManager;
 import src.ScreenController;
 
-
-public class ViewProductsScreen {
+public class UnderstockedProductsScreen {
     private ScreenController controller;
     private final VBox layout;
 
-    public ViewProductsScreen(ScreenController controller) {
+    public UnderstockedProductsScreen(ScreenController controller) {
         this.controller = controller;
 
-        Label resultLabel = new Label();
+        Label title = new Label("Understocked Products:");
 
         TableView<Product> productTable = new TableView<>();
 
@@ -42,19 +44,23 @@ public class ViewProductsScreen {
 
         productTable.setPrefHeight(200);
         productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
-        productTable.getItems().setAll(ProductManager.getProducts());
+        ProductList understocked = ProductManager.getProducts().getUnderstockedProducts();
+        if (understocked.isEmpty()) {
+            title.setText("No Understocked Products");
+        } else {
+            productTable.getItems().setAll(understocked);
+        }
 
         Button backButton = new Button("Back to Home");
         backButton.setOnAction(_ -> controller.activate("home"));
 
         layout = new VBox(10,
-                resultLabel,
-                new Label("Current Products:"), productTable, backButton);
+                title, productTable, backButton);
 
         layout.setStyle("-fx-padding: 20;");
     }
 
-    public Parent getView() {
+    public VBox getView() {
         return layout;
     }
 }
