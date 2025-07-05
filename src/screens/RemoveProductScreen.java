@@ -68,7 +68,6 @@ public class RemoveProductScreen {
             removeButton.setManaged(false);
         }
 
-
         Button backButton = new Button("Back to Home");
         backButton.setOnAction(_ -> controller.activate("home"));
 

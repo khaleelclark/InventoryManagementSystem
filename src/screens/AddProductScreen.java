@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 
 public class AddProductScreen {
     private ScreenController controller;
-    private VBox layout;
+    private final VBox layout;
 
     public AddProductScreen(ScreenController controller) {
         this.controller = controller;
