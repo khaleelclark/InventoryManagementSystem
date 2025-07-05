@@ -8,11 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
 public class HomeScreen {
-    private ScreenController controller;
     private final VBox layout;
 
     public HomeScreen(ScreenController controller) {
-        this.controller = controller;
         layout = new VBox(10);
 
         Button addButton = new Button("Add Product");

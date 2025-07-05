@@ -12,11 +12,9 @@ import src.ScreenController;
 
 
 public class ViewProductsScreen {
-    private ScreenController controller;
     private final VBox layout;
 
     public ViewProductsScreen(ScreenController controller) {
-        this.controller = controller;
 
         Label title = new Label("All Products: ");
 

@@ -13,11 +13,9 @@ import src.ProductManager;
 import src.ScreenController;
 
 public class UnderstockedProductsScreen {
-    private ScreenController controller;
     private final VBox layout;
 
     public UnderstockedProductsScreen(ScreenController controller) {
-        this.controller = controller;
 
         Label title = new Label("Understocked Products:");
 

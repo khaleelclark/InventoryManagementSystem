@@ -1,6 +1,5 @@
 package src.screens;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -11,11 +10,9 @@ import javafx.geometry.Insets;
 import src.*;
 
 public class UpdateQuantityScreen {
-    private final ScreenController controller;
     private final VBox layout;
 
     public UpdateQuantityScreen(ScreenController controller) {
-        this.controller = controller;
 
         Label title = new Label("Update Product");
 

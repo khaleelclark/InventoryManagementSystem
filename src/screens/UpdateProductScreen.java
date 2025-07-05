@@ -11,11 +11,9 @@ import javafx.geometry.Insets;
 import src.*;
 
 public class UpdateProductScreen {
-    private final ScreenController controller;
     private final VBox layout;
 
     public UpdateProductScreen(ScreenController controller) {
-        this.controller = controller;
 
         Label title = new Label("Update Product");
 
