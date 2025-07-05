@@ -1,7 +1,7 @@
 /**
  * Khaleel Zindel Clark
  * CEN 3024 - Software Development 1
- * June 18, 2025
+ * July 5, 2025
  * ProductList.java
  * This class creates a custom ProductList object
  * that extends ArrayList and has custom crud methods
@@ -34,30 +34,16 @@ public class ProductList extends ArrayList<Product> {
     /**
      * method: getUnderstockedProducts
      * parameters: none
-     * return: void
+     * return: ProductList
      * purpose: this method returns all products in
      * the inventory that are below their expected stock
      */
     public ProductList getUnderstockedProducts() {
         ProductList understockedProducts = new ProductList();
 
-        if (this.isEmpty()) {
-            System.out.println("No products in inventory.");
-            return understockedProducts;
-        }
-
         for (Product p : this) {
             if (p.getQuantity() < p.getExpectedQuantity()) {
                 understockedProducts.add(p);
-            }
-        }
-
-        if (understockedProducts.isEmpty()) {
-            System.out.println("No understocked products!");
-        } else {
-            System.out.println("Understocked Products:");
-            for (Product p : understockedProducts) {
-                System.out.println(p.getQuantityInformation());
             }
         }
         return understockedProducts;
