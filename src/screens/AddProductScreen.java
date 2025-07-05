@@ -1,14 +1,10 @@
 package src.screens;
 
 import javafx.scene.Parent;
-import src.ScreenController;
+import src.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import src.Category;
-import src.Product;
-import src.ProductManager;
-import src.ErrorCodes;
 
 public class AddProductScreen {
     private ScreenController controller;
@@ -67,7 +63,15 @@ public class AddProductScreen {
 
         productTable.setPrefHeight(200);
         productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
-        productTable.getItems().setAll(ProductManager.getProducts());
+
+        ProductList products = ProductManager.getProducts();
+        productTable.getItems().setAll(products);
+
+        if (products.isEmpty()) {
+            title.setText("No Products Found. Add products now!");
+            productTable.setVisible(false);
+            productTable.setManaged(false);
+        }
 
         addButton.setOnAction(_ -> {
             try {
@@ -84,7 +88,7 @@ public class AddProductScreen {
                 }
 
                 int result = ProductManager.addProduct(name, qty, expectedQty, cost, selectedCategory, location);
-                productTable.getItems().setAll(ProductManager.getProducts());
+                productTable.getItems().setAll(products);
 
                 if (result == ErrorCodes.OK) {
                     resultLabel.setText("Product added!");
@@ -103,13 +107,12 @@ public class AddProductScreen {
             }
         });
 
-        backButton.setOnAction(e -> controller.activate("home"));
+        backButton.setOnAction(_ -> controller.activate("home"));
 
         layout = new VBox(10,
                 title, nameField, qtyField, expectedQtyField,
                 costField, categoryComboBox, locationField,
-                addButton, resultLabel, backButton,
-                new Label("Current Products:"), productTable);
+                addButton, resultLabel, backButton, productTable);
 
         layout.setStyle("-fx-padding: 20;");
     }
