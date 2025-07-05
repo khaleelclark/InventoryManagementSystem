@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import src.Product;
+import src.ProductList;
 import src.ProductManager;
 import src.ScreenController;
 
@@ -16,7 +17,7 @@ public class ViewProductsScreen {
     public ViewProductsScreen(ScreenController controller) {
         this.controller = controller;
 
-        Label resultLabel = new Label();
+        Label title = new Label("All Products: ");
 
         TableView<Product> productTable = new TableView<>();
 
@@ -42,14 +43,20 @@ public class ViewProductsScreen {
 
         productTable.setPrefHeight(200);
         productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
-        productTable.getItems().setAll(ProductManager.getProducts());
+        ProductList products = ProductManager.getProducts();
+        productTable.getItems().setAll(products);
+
+        if (products.isEmpty()) {
+            title.setText("No Products Found. Add products now!");
+            productTable.setVisible(false);
+            productTable.setManaged(false);
+        }
 
         Button backButton = new Button("Back to Home");
         backButton.setOnAction(_ -> controller.activate("home"));
 
         layout = new VBox(10,
-                resultLabel,
-                new Label("Current Products:"), productTable, backButton);
+                title, productTable, backButton);
 
         layout.setStyle("-fx-padding: 20;");
     }
