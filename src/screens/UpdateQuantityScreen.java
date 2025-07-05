@@ -97,8 +97,8 @@ public class UpdateQuantityScreen {
                         selected.setExpectedQuantity(expected);
                     }
                 }
-                
-                productTable.getItems().setAll(ProductManager.getProducts());
+
+                productTable.getItems().setAll(products);
                 productTable.refresh();
 
                 status.setText("Product updated!");

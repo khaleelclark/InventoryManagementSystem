@@ -64,9 +64,16 @@ public class UpdateProductScreen {
         form.addRow(4, new Label("Category:"), categoryBox);
         form.addRow(5, new Label("Location:"), locationField);
 
+        Button updateButton = new Button("Update Product");
+
         if (products.isEmpty()) {
+            title.setText("No Products to update. Add some now!");
             form.setVisible(false);
             form.setManaged(false);
+            productTable.setVisible(false);
+            productTable.setManaged(false);
+            updateButton.setVisible(false);
+            updateButton.setManaged(false);
         }
 
         Label status = new Label();
@@ -84,7 +91,7 @@ public class UpdateProductScreen {
             }
         });
 
-        Button updateButton = new Button("Update Product");
+
         updateButton.setOnAction(_ -> {
             Product selected = productTable.getSelectionModel().getSelectedItem();
             if (selected == null) {

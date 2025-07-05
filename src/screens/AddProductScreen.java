@@ -1,50 +1,59 @@
 package src.screens;
 
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import src.*;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 
 import java.io.File;
 
 public class AddProductScreen {
-    private ScreenController controller;
     private final VBox layout;
 
     public AddProductScreen(ScreenController controller) {
-        this.controller = controller;
 
         Label title = new Label("Add Product");
 
         TextField nameField = new TextField();
-        nameField.setPromptText("Product Name");
-
         TextField qtyField = new TextField();
-        qtyField.setPromptText("Quantity");
-
         TextField expectedQtyField = new TextField();
-        expectedQtyField.setPromptText("Expected Quantity");
-
         TextField costField = new TextField();
-        costField.setPromptText("Estimated Cost");
-
-        ComboBox<Category> categoryComboBox = new ComboBox<>();
-        categoryComboBox.getItems().addAll(Category.values());
-        categoryComboBox.setPromptText("Select Category");
-
+        ComboBox<Category> categoryBox = new ComboBox<>();
         TextField locationField = new TextField();
+
+        nameField.setPromptText("Product Name");
+        qtyField.setPromptText("Quantity");
+        expectedQtyField.setPromptText("Expected Quantity");
+        costField.setPromptText("Estimated Cost");
         locationField.setPromptText("Location");
+        categoryBox.getItems().addAll(Category.values());
+        categoryBox.setPromptText("Select Category");
+
+        GridPane form = new GridPane();
+        form.setHgap(10);
+        form.setVgap(10);
+        form.setPadding(new Insets(10));
+        form.addRow(0, new Label("Name:"), nameField);
+        form.addRow(1, new Label("Quantity:"), qtyField);
+        form.addRow(2, new Label("Expected Qty:"), expectedQtyField);
+        form.addRow(3, new Label("Estimated Cost:"), costField);
+        form.addRow(4, new Label("Category:"), categoryBox);
+        form.addRow(5, new Label("Location:"), locationField);
 
         Button addButton = new Button("Add Product");
-        Button backButton = new Button("Back to Home");
+        Button importButton = new Button("Import from File");
         Button viewProductsButton = new Button("View Products");
-        viewProductsButton.setManaged(false);
+        Button backButton = new Button("Back to Home");
+
         viewProductsButton.setVisible(false);
+        viewProductsButton.setManaged(false);
 
         Label resultLabel = new Label();
+        Label importStatus = new Label();
 
         addButton.setOnAction(_ -> {
             try {
@@ -52,76 +61,69 @@ public class AddProductScreen {
                 int qty = Integer.parseInt(qtyField.getText());
                 int expectedQty = Integer.parseInt(expectedQtyField.getText());
                 double cost = Double.parseDouble(costField.getText());
-                Category selectedCategory = categoryComboBox.getValue();
+                Category category = categoryBox.getValue();
                 String location = locationField.getText();
 
-                if (selectedCategory == null) {
+                if (category == null) {
                     resultLabel.setText("Please select a category.");
                     return;
                 }
 
-                int result = ProductManager.addProduct(name, qty, expectedQty, cost, selectedCategory, location);
-
+                int result = ProductManager.addProduct(name, qty, expectedQty, cost, category, location);
                 if (result == ErrorCodes.OK) {
                     resultLabel.setText("Product added!");
                     nameField.clear();
                     qtyField.clear();
                     expectedQtyField.clear();
                     costField.clear();
-                    categoryComboBox.getSelectionModel().clearSelection();
                     locationField.clear();
-                    viewProductsButton.setManaged(true);
+                    categoryBox.getSelectionModel().clearSelection();
+
                     viewProductsButton.setVisible(true);
+                    viewProductsButton.setManaged(true);
                 } else {
                     resultLabel.setText("Error code: " + result);
                 }
-
             } catch (Exception ex) {
                 resultLabel.setText("Invalid input: " + ex.getMessage());
             }
         });
 
-        Button importButton = new Button("Import from File");
-        Label importStatus = new Label();
-
-
         importButton.setOnAction(_ -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose Product File");
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("CSV and TXT files", "*.csv", "*.txt")
-            );
-
-            File selectedFile = fileChooser.showOpenDialog(null);
-            if (selectedFile != null) {
-                boolean success = ProductManager.addProductFromFile(selectedFile);
-
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV/TXT", "*.csv", "*.txt"));
+            File file = fileChooser.showOpenDialog(null);
+            if (file != null) {
+                boolean success = ProductManager.addProductFromFile(file);
                 if (success) {
                     importStatus.setText("Products loaded successfully!");
                     viewProductsButton.setVisible(true);
                     viewProductsButton.setManaged(true);
                 } else {
-                    importStatus.setText("Error: Could not import products. Check file formatting.");
-                    viewProductsButton.setVisible(false);
-                    viewProductsButton.setManaged(true);
+                    importStatus.setText("Failed to import. Check file format.");
                 }
             }
         });
-
 
         viewProductsButton.setOnAction(_ -> controller.activate("view"));
         backButton.setOnAction(_ -> controller.activate("home"));
 
         layout = new VBox(10,
-                title, nameField, qtyField, expectedQtyField,
-                costField, categoryComboBox, locationField,
-                addButton, importButton, importStatus, viewProductsButton, resultLabel, backButton);
+                title,
+                form,
+                addButton,
+                resultLabel,
+                importButton,
+                importStatus,
+                viewProductsButton,
+                backButton
+        );
 
-        layout.setStyle("-fx-padding: 20;");
+        layout.setPadding(new Insets(20));
     }
 
     public Parent getView() {
         return layout;
     }
 }
-

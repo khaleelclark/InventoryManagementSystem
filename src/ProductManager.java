@@ -13,13 +13,12 @@ import java.util.stream.Stream;
 /**
  * Khaleel Zindel Clark
  * CEN 3024 - Software Development 1
- * June 18, 2025
+ * July 5, 2025
  * ProductManager.java
  * This class creates houses the core logic for the IMS
  */
 public class ProductManager {
     private static final ProductList products = new ProductList();
-    public static Scanner scanner = new Scanner(System.in);
 
     public static boolean addProductFromFile(File file) {
         String filePath = file.getAbsolutePath().toLowerCase();
@@ -53,7 +52,7 @@ public class ProductManager {
                 String[] columns = input.split(",");
 
                 if (columns.length != 6) {
-                    System.err.println("Line " + lineNumber + ": Expected 6 columns but got " + columns.length);
+                    showError("Too many Columns ", "Line: " + lineNumber + " Expected 6 columns but got " + columns.length);
                     lineNumber++;
                     continue;
                 }
@@ -218,168 +217,6 @@ public class ProductManager {
         }
         return ErrorCodes.NOT_FOUND;
     }
-
-
-//    /**
-//     * method: updateProduct
-//     * parameters: none
-//     * return: boolean
-//     * purpose: this method displays all products then prompts the user to input the
-//     * fields they would like to update, allowing the user to enter past fields they do not want to change.
-//     */
-//    public static boolean updateProduct() {
-//
-//        if (products.isEmpty()) {
-//            System.out.println("\nThere are no products to update. Add some now!");
-//            return false;
-//        }
-//
-//        Product product = null;
-//
-//        while (product == null) {
-//            System.out.print("Enter the name of the product to update, or enter 'c' to cancel\n");
-//            viewAllProducts();
-//            String inputName = scanner.nextLine().trim();
-//
-//            if (inputName.equalsIgnoreCase("c")) {
-//                return false;
-//            }
-//
-//            if (!containsProductWithName(inputName, products)) {
-//                System.err.println("No product found with the name: " + inputName);
-//            } else {
-//                product = getProductByName(products, inputName);
-//            }
-//        }
-//
-//
-//        System.out.println("\nLeave a field blank to keep the current value.");
-//
-//        while (true) {
-//            System.out.print("New name (" + product.getName() + "): ");
-//            String newName = scanner.nextLine().trim();
-//
-//            if (newName.isBlank()) {
-//                break;
-//            }
-//            int code = isValidProductName(newName);
-//            if (code == ErrorCodes.OK) {
-//                product.setName(newName);
-//                break;
-//            } else {
-//                printValidationError(code);
-//            }
-//        }
-//
-//        while (true) {
-//            System.out.print("New quantity (" + product.getQuantity() + "): ");
-//            String quantityInput = scanner.nextLine().trim();
-//
-//            if (quantityInput.isBlank()) {
-//                break;
-//            }
-//
-//            try {
-//                int newQty = Integer.parseInt(quantityInput);
-//                int code = isValidQuantity(newQty);
-//                if (code == ErrorCodes.OK) {
-//                    product.setQuantity(newQty);
-//                    break;
-//                } else {
-//                    printValidationError(code);
-//                }
-//            } catch (NumberFormatException e) {
-//                System.err.println("Invalid number: " + quantityInput + " Please try again with a valid number.");
-//            }
-//        }
-//
-//        while (true) {
-//            System.out.print("New expected quantity (" + product.getExpectedQuantity() + "): ");
-//            String expectedQuantityInput = scanner.nextLine().trim();
-//
-//            if (expectedQuantityInput.isBlank()) {
-//                break;
-//            }
-//
-//            try {
-//                int newExpected = Integer.parseInt(expectedQuantityInput);
-//                int code = isValidQuantity(newExpected);
-//                if (code == ErrorCodes.OK) {
-//                    product.setExpectedQuantity(newExpected);
-//                    break;
-//                } else {
-//                    printValidationError(code);
-//                }
-//            } catch (NumberFormatException e) {
-//                System.err.println("Invalid number: " + expectedQuantityInput + " Please try again with a valid number.");
-//            }
-//        }
-//        while (true) {
-//            System.out.print("New estimated cost (" + product.getEstimatedCost() + "): ");
-//            String estimatedCostInput = scanner.nextLine().trim();
-//
-//            if (estimatedCostInput.isBlank()) {
-//                break;
-//            }
-//            try {
-//                double newCost = Double.parseDouble(estimatedCostInput);
-//                int code = isValidEstimatedCost(newCost);
-//                if (code == ErrorCodes.OK) {
-//                    product.setEstimatedCost(newCost);
-//                    break;
-//                } else {
-//                    printValidationError(code);
-//                }
-//            } catch (NumberFormatException e) {
-//                System.err.println("Invalid number: " + estimatedCostInput + " Please try again with a valid number.");
-//            }
-//        }
-//
-//        while (true) {
-//            System.out.println("\nSelect a new category by number, or leave blank to keep current (" + product.getCategory().getCategoryName() + "):");
-//
-//            Category[] categories = Category.values();
-//            for (int i = 0; i < categories.length; i++) {
-//                System.out.println((i + 1) + ". " + categories[i].getCategoryName());
-//            }
-//            String input = scanner.nextLine().trim();
-//
-//            if (input.isBlank()) {
-//                break;
-//            }
-//            try {
-//                int choice = Integer.parseInt(input);
-//                if (choice >= 1 && choice <= categories.length) {
-//                    Category selectedCategory = categories[choice - 1];
-//                    System.out.println("You selected: " + selectedCategory.getCategoryName());
-//                    product.setCategory(selectedCategory);
-//                    break;
-//                } else {
-//                    System.err.println("Invalid number. Please choose between 1 and " + categories.length + ".");
-//                }
-//            } catch (NumberFormatException e) {
-//                System.err.println("Invalid input. Please enter a number.");
-//            }
-//        }
-//
-//        while (true) {
-//            System.out.print("New location (" + product.getLocation() + "): ");
-//            String newLocation = scanner.nextLine().trim();
-//
-//            if (newLocation.isBlank()) {
-//                break;
-//            }
-//            int code = isValidProductName(newLocation);
-//            if (code == ErrorCodes.OK) {
-//                product.setLocation(newLocation);
-//                break;
-//            } else {
-//                printValidationError(code);
-//            }
-//        }
-//        return true;
-//    }
-
 
     /**
      * method: getProductByName
