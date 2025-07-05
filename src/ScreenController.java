@@ -31,6 +31,9 @@ public class ScreenController {
             case "understocked":
                 stage.setScene(new Scene(new UnderstockedProductsScreen(this).getView(), 600, 400));
                 break;
+            case "quantity":
+                stage.setScene(new Scene(new UpdateQuantityScreen(this).getView(), 600, 400));
+                break;
             default:
                 throw new IllegalArgumentException("Unknown screen: " + screenName);
         }

@@ -3,6 +3,7 @@ package src.screens;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import src.Product;
 import src.ProductList;
@@ -41,7 +42,9 @@ public class ViewProductsScreen {
         TableColumn<Product, String> locationCol = new TableColumn<>("Location");
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
 
-        productTable.setPrefHeight(200);
+        productTable.setPrefHeight(300);
+        productTable.setPrefWidth(500);
+        VBox.setVgrow(productTable, Priority.ALWAYS);
         productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
         ProductList products = ProductManager.getProducts();
         productTable.getItems().setAll(products);

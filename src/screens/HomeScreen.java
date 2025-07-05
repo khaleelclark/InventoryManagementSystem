@@ -28,6 +28,7 @@ public class HomeScreen {
         updateButton.setOnAction(_ -> controller.activate("update"));
         removeButton.setOnAction(_ -> controller.activate("remove"));
         understockedProductsButton.setOnAction(_ -> controller.activate("understocked"));
+        updateQuantityButton.setOnAction(_ -> controller.activate("quantity"));
         calculateInvEstimateButton.setOnAction(_ -> {
 
             double totalEstimate = ProductManager.getProducts().getTotalInventoryEstimate();

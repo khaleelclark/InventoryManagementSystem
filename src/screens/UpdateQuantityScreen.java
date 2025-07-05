@@ -10,11 +10,11 @@ import javafx.scene.layout.Priority;
 import javafx.geometry.Insets;
 import src.*;
 
-public class UpdateProductScreen {
+public class UpdateQuantityScreen {
     private final ScreenController controller;
     private final VBox layout;
 
-    public UpdateProductScreen(ScreenController controller) {
+    public UpdateQuantityScreen(ScreenController controller) {
         this.controller = controller;
 
         Label title = new Label("Update Product");
@@ -32,17 +32,8 @@ public class UpdateProductScreen {
         TableColumn<Product, Integer> expectedCol = new TableColumn<>("Expected Qty");
         expectedCol.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
 
-        TableColumn<Product, Double> costCol = new TableColumn<>("Est. Cost");
-        costCol.setCellValueFactory(new PropertyValueFactory<>("estimatedCost"));
 
-        TableColumn<Product, String> categoryCol = new TableColumn<>("Category");
-        categoryCol.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getCategory().getCategoryName()));
-
-        TableColumn<Product, String> locationCol = new TableColumn<>("Location");
-        locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
-
-        productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
+        productTable.getColumns().addAll(nameCol, qtyCol, expectedCol);
         ProductList products = ProductManager.getProducts();
 
         GridPane form = new GridPane();
@@ -53,16 +44,10 @@ public class UpdateProductScreen {
         TextField nameField = new TextField();
         TextField qtyField = new TextField();
         TextField expectedQtyField = new TextField();
-        TextField costField = new TextField();
-        ComboBox<Category> categoryBox = new ComboBox<>(FXCollections.observableArrayList(Category.values()));
-        TextField locationField = new TextField();
 
         form.addRow(0, new Label("Name:"), nameField);
         form.addRow(1, new Label("Quantity:"), qtyField);
         form.addRow(2, new Label("Expected Qty:"), expectedQtyField);
-        form.addRow(3, new Label("Est. Cost:"), costField);
-        form.addRow(4, new Label("Category:"), categoryBox);
-        form.addRow(5, new Label("Location:"), locationField);
 
         if (products.isEmpty()) {
             form.setVisible(false);
@@ -77,9 +62,6 @@ public class UpdateProductScreen {
                 nameField.setText(selected.getName());
                 qtyField.setText(String.valueOf(selected.getQuantity()));
                 expectedQtyField.setText(String.valueOf(selected.getExpectedQuantity()));
-                costField.setText(String.valueOf(selected.getEstimatedCost()));
-                categoryBox.setValue(selected.getCategory());
-                locationField.setText(selected.getLocation());
                 status.setText("");
             }
         });
@@ -115,28 +97,7 @@ public class UpdateProductScreen {
                         selected.setExpectedQuantity(expected);
                     }
                 }
-
-                String costStr = costField.getText().trim();
-                if (!costStr.isBlank()) {
-                    double cost = Double.parseDouble(costStr);
-                    if (cost != selected.getEstimatedCost() &&
-                            ProductManager.isValidEstimatedCost(cost) == ErrorCodes.OK) {
-                        selected.setEstimatedCost(cost);
-                    }
-                }
-
-                Category category = categoryBox.getValue();
-                if (category != null && category != selected.getCategory()) {
-                    selected.setCategory(category);
-                }
-
-                String location = locationField.getText().trim();
-                if (!location.isBlank() && !location.equals(selected.getLocation()) &&
-                        ProductManager.isValidProductName(location) == ErrorCodes.OK) {
-                    selected.setLocation(location);
-                }
-
-                // Refresh table
+                
                 productTable.getItems().setAll(ProductManager.getProducts());
                 productTable.refresh();
 

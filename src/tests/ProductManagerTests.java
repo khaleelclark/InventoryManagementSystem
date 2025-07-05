@@ -70,11 +70,11 @@ class ProductManagerTests {
 
     @Test
     @DisplayName("Remove product by name")
-    void removeProductByName() {
-        int successCode = ProductManager.removeProductByName("Bread", productList);
+    void removeProduct() {
+        int successCode = ProductManager.removeProduct("Bread", productList);
         assertEquals(0, successCode);
 
-        int failureCode = ProductManager.removeProductByName("Television", productList);
+        int failureCode = ProductManager.removeProduct("Television", productList);
         assertEquals(8, failureCode);
     }
 

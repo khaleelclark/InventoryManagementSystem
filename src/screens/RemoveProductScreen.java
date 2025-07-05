@@ -2,6 +2,7 @@ package src.screens;
 
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import src.Product;
 import src.ProductList;
@@ -52,7 +53,9 @@ public class RemoveProductScreen {
         TableColumn<Product, String> locationCol = new TableColumn<>("Location");
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
 
-        productTable.setPrefHeight(200);
+        productTable.setPrefHeight(300);
+        productTable.setPrefWidth(500);
+        VBox.setVgrow(productTable, Priority.ALWAYS);
         productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
 
         ProductList productList = ProductManager.getProducts();
@@ -96,7 +99,7 @@ public class RemoveProductScreen {
 
             confirmation.showAndWait().ifPresent(response -> {
                 if (response.getButtonData().isDefaultButton()) {
-                    int result = ProductManager.removeProductByName(selected.getName(), ProductManager.getProducts());
+                    int result = ProductManager.removeProduct(selected.getName(), ProductManager.getProducts());
                     if (result == 0) {
                         productTable.getItems().setAll(ProductManager.getProducts());
                     } else {

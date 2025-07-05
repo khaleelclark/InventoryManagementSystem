@@ -1,10 +1,14 @@
 package src.screens;
 
 import javafx.scene.Parent;
+import javafx.scene.layout.Priority;
+import javafx.stage.FileChooser;
 import src.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+
+import java.io.File;
 
 public class AddProductScreen {
     private ScreenController controller;
@@ -36,42 +40,11 @@ public class AddProductScreen {
 
         Button addButton = new Button("Add Product");
         Button backButton = new Button("Back to Home");
+        Button viewProductsButton = new Button("View Products");
+        viewProductsButton.setManaged(false);
+        viewProductsButton.setVisible(false);
 
         Label resultLabel = new Label();
-
-        TableView<Product> productTable = new TableView<>();
-
-        TableColumn<Product, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Product, Integer> qtyCol = new TableColumn<>("Quantity");
-        qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-
-        TableColumn<Product, Integer> expectedCol = new TableColumn<>("Expected Quantity");
-        expectedCol.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
-
-        TableColumn<Product, Double> costCol = new TableColumn<>("Estimated Cost");
-        costCol.setCellValueFactory(new PropertyValueFactory<>("estimatedCost"));
-
-        TableColumn<Product, String> categoryCol = new TableColumn<>("Category");
-        categoryCol.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(
-                        cellData.getValue().getCategory().getCategoryName()));
-
-        TableColumn<Product, String> locationCol = new TableColumn<>("Location");
-        locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
-
-        productTable.setPrefHeight(200);
-        productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
-
-        ProductList products = ProductManager.getProducts();
-        productTable.getItems().setAll(products);
-
-        if (products.isEmpty()) {
-            title.setText("No Products Found. Add products now!");
-            productTable.setVisible(false);
-            productTable.setManaged(false);
-        }
 
         addButton.setOnAction(_ -> {
             try {
@@ -88,7 +61,6 @@ public class AddProductScreen {
                 }
 
                 int result = ProductManager.addProduct(name, qty, expectedQty, cost, selectedCategory, location);
-                productTable.getItems().setAll(products);
 
                 if (result == ErrorCodes.OK) {
                     resultLabel.setText("Product added!");
@@ -98,6 +70,8 @@ public class AddProductScreen {
                     costField.clear();
                     categoryComboBox.getSelectionModel().clearSelection();
                     locationField.clear();
+                    viewProductsButton.setManaged(true);
+                    viewProductsButton.setVisible(true);
                 } else {
                     resultLabel.setText("Error code: " + result);
                 }
@@ -107,12 +81,41 @@ public class AddProductScreen {
             }
         });
 
+        Button importButton = new Button("Import from File");
+        Label importStatus = new Label();
+
+
+        importButton.setOnAction(_ -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choose Product File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("CSV and TXT files", "*.csv", "*.txt")
+            );
+
+            File selectedFile = fileChooser.showOpenDialog(null);
+            if (selectedFile != null) {
+                boolean success = ProductManager.addProductFromFile(selectedFile);
+
+                if (success) {
+                    importStatus.setText("Products loaded successfully!");
+                    viewProductsButton.setVisible(true);
+                    viewProductsButton.setManaged(true);
+                } else {
+                    importStatus.setText("Error: Could not import products. Check file formatting.");
+                    viewProductsButton.setVisible(false);
+                    viewProductsButton.setManaged(true);
+                }
+            }
+        });
+
+
+        viewProductsButton.setOnAction(_ -> controller.activate("view"));
         backButton.setOnAction(_ -> controller.activate("home"));
 
         layout = new VBox(10,
                 title, nameField, qtyField, expectedQtyField,
                 costField, categoryComboBox, locationField,
-                addButton, resultLabel, backButton, productTable);
+                addButton, importButton, importStatus, viewProductsButton, resultLabel, backButton);
 
         layout.setStyle("-fx-padding: 20;");
     }

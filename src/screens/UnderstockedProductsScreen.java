@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import src.Product;
 import src.ProductList;
@@ -42,7 +43,9 @@ public class UnderstockedProductsScreen {
         TableColumn<Product, String> locationCol = new TableColumn<>("Location");
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
 
-        productTable.setPrefHeight(200);
+        productTable.setPrefHeight(300);
+        productTable.setPrefWidth(500);
+        VBox.setVgrow(productTable, Priority.ALWAYS);
         productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
         ProductList understocked = ProductManager.getProducts().getUnderstockedProducts();
         if (understocked.isEmpty()) {
