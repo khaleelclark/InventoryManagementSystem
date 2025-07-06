@@ -12,6 +12,14 @@ import src.ProductList;
 import src.ProductManager;
 import src.ScreenController;
 
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * July 5th, 2025
+ * UnderstockedProductsScreen.java
+ * This class creates the understocked products screen and holds
+ * all the ui logic for displaying all products understocked in the inventory.
+ */
 public class UnderstockedProductsScreen {
     private final VBox layout;
 

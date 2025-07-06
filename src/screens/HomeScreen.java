@@ -10,6 +10,15 @@ import javafx.scene.layout.GridPane;
 import src.ProductManager;
 import src.ScreenController;
 
+
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * July 5th, 2025
+ * HomeScreen.java
+ * This class creates the home screen and holds
+ * all the ui logic entry points for managing the inventory.
+ */
 public class HomeScreen {
     private final GridPane layout;
 

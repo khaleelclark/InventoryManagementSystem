@@ -10,6 +10,14 @@ import javafx.scene.layout.Priority;
 import javafx.geometry.Insets;
 import src.*;
 
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * July 5th, 2025
+ * UpdateProductScreen.java
+ * This class creates the update product screen and holds
+ * all the ui logic for updating products in the inventory.
+ */
 public class UpdateProductScreen {
     private final VBox layout;
 

@@ -12,6 +12,14 @@ import src.ScreenController;
 public class RemoveProductScreen {
     private final VBox layout;
 
+    /**
+     * Khaleel Zindel Clark
+     * CEN 3024 - Software Development 1
+     * July 5th, 2025
+     * RemoveProductScreen.java
+     * This class creates the remove product screen and holds
+     * all the ui logic for removing products from the inventory.
+     */
     public RemoveProductScreen(ScreenController controller) {
 
         Label title = new Label("Remove Product");

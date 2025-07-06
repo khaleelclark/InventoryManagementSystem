@@ -9,6 +9,14 @@ import javafx.scene.layout.Priority;
 import javafx.geometry.Insets;
 import src.*;
 
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * July 5th, 2025
+ * UpdateQuantityScreen.java
+ * This class creates the update quantity screen and holds
+ * all the ui logic for updating a products quantity in the inventory.
+ */
 public class UpdateQuantityScreen {
     private final VBox layout;
 

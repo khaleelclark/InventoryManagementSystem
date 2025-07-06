@@ -10,6 +10,14 @@ import src.*;
 
 import java.io.File;
 
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * July 5th, 2025
+ * AddProductScreen.java
+ * This class creates the add product screen and holds
+ * all the ui logic for adding products to the inventory.
+ */
 public class AddProductScreen {
     private final VBox layout;
 

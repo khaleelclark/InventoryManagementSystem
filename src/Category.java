@@ -3,7 +3,7 @@ package src;
 /**
  * Khaleel Zindel Clark
  * CEN 3024 - Software Development 1
- * June 18, 2025
+ * July 5th, 2025
  * Category.java
  * This class creates an enumerator for the user to select
  * from predetermined categories

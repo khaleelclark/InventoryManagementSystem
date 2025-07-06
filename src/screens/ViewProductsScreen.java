@@ -10,7 +10,14 @@ import src.ProductList;
 import src.ProductManager;
 import src.ScreenController;
 
-
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * July 5th, 2025
+ * ViewProductsScreen.java
+ * This class creates the view products screen and holds
+ * all of the ui logic for viewing products in the inventory.
+ */
 public class ViewProductsScreen {
     private final VBox layout;
 
