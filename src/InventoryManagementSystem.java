@@ -3,7 +3,7 @@ package src;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class InventoryManagementSystem extends Application {
 
     @Override
     public void start(Stage primaryStage) {
