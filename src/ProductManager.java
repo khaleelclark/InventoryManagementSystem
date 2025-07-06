@@ -20,6 +20,12 @@ import java.util.stream.Stream;
 public class ProductManager {
     private static final ProductList products = new ProductList();
 
+    /**
+     * method: addProductFrom File
+     * parameters: File file
+     * return: boolean
+     * purpose: this method holds the business logic for adding a product from a file.
+     */
     public static boolean addProductFromFile(File file) {
         String filePath = file.getAbsolutePath().toLowerCase();
         if (!(filePath.endsWith(".csv") || filePath.endsWith(".txt"))) {
@@ -93,6 +99,12 @@ public class ProductManager {
         }
     }
 
+    /**
+     * method: showError
+     * parameters: String title, String message
+     * return: void
+     * purpose: this method displays errors to the ui with custom text.
+     */
     public static void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -101,6 +113,12 @@ public class ProductManager {
         alert.showAndWait();
     }
 
+    /**
+     * method: showSuccess
+     * parameters: String title, String message
+     * return: void
+     * purpose: this method displays success messages to the ui with custom text.
+     */
     public static void showSuccess(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -275,6 +293,12 @@ public class ProductManager {
                 .anyMatch(p -> p.getName().equalsIgnoreCase(inputName));
     }
 
+    /**
+     * method: getProducts
+     * parameters: none
+     * return: ProductList
+     * purpose: this method returns a list of products for use by the ui.
+     */
     public static ProductList getProducts() {
         return products;
     }
