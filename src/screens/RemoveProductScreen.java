@@ -49,7 +49,7 @@ public class RemoveProductScreen {
         Button removeButton = getButton(productTable);
 
         if (productList.isEmpty()) {
-            title.setText("No Products Found. Add products now!");
+            title.setText("No products found to remove. Add products now!");
             productTable.setVisible(false);
             productTable.setManaged(false);
             removeButton.setVisible(false);

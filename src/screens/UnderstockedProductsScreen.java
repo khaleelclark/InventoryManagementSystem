@@ -48,6 +48,8 @@ public class UnderstockedProductsScreen {
         ProductList understocked = ProductManager.getProducts().getUnderstockedProducts();
         if (understocked.isEmpty()) {
             title.setText("No Understocked Products");
+            productTable.setVisible(false);
+            productTable.setManaged(false);
         } else {
             productTable.getItems().setAll(understocked);
         }

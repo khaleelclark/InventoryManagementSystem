@@ -93,8 +93,16 @@ public class ProductManager {
         }
     }
 
-    private static void showError(String title, String message) {
+    public static void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void showSuccess(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -113,6 +121,9 @@ public class ProductManager {
 
         int quantityCode = isValidQuantity(quantity);
         if (quantityCode != ErrorCodes.OK) return quantityCode;
+
+        int expectedQuantityCode = isValidQuantity(expectedQuantity);
+        if (expectedQuantityCode != ErrorCodes.OK) return expectedQuantityCode;
 
         int costCode = isValidEstimatedCost(estimatedCost);
         if (costCode != ErrorCodes.OK) return costCode;
@@ -170,32 +181,32 @@ public class ProductManager {
     public static void printValidationError(int code) {
         switch (code) {
             case ErrorCodes.NAME_EMPTY:
-                System.err.println("Error: Product name cannot be empty.");
+                showError("Name Empty", "Product name cannot be empty.");
                 break;
             case ErrorCodes.NAME_TOO_SHORT:
-                System.err.println("Error: Product name must be at least 2 characters long.");
+                showError("Name too Short", "Product name must be at least 2 characters long.");
                 break;
             case ErrorCodes.NAME_TOO_LONG:
-                System.err.println("Error: Product name must be less than 50 characters.");
+                showError("Name too Long", "Product name must be less than 50 characters.");
                 break;
             case ErrorCodes.NAME_INVALID_CHARACTERS:
-                System.err.println("Error: Product name contains invalid characters.");
-                System.err.println("Allowed: letters, numbers, spaces, apostrophes ('), dashes (-), and parentheses.");
+                showError("Invalid Characters", "Product name contains invalid characters.\n" +
+                        "Allowed: letters, numbers, spaces, apostrophes ('), dashes (-), and parentheses.");
                 break;
             case ErrorCodes.QUANTITY_OUT_OF_RANGE:
-                System.err.println("Error: Quantity must be between 0 and 100.");
+                showError("Quantity out of Range", "Quantity and/or Expected Quantity must be between 0 and 100.");
                 break;
             case ErrorCodes.COST_NEGATIVE:
-                System.err.println("Error: Estimated cost must be a positive number.");
+                showError("Negative Cost", "Estimated cost must be a positive number.");
                 break;
             case ErrorCodes.NOT_FOUND:
-                System.err.println("Error: Name not found.");
+                showError("Not Found", "Error: Name not found.");
                 break;
             case ErrorCodes.NOT_UPDATED:
-                System.out.println("Product Not Updated.");
+                showError("Not Updated", "Product Not Updated.");
                 break;
             default:
-                System.err.println("Unknown error. Code: " + code);
+                showError("Unknown", "Unknown error. Code: " + code);
         }
     }
 

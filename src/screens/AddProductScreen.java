@@ -51,41 +51,84 @@ public class AddProductScreen {
         viewProductsButton.setVisible(false);
         viewProductsButton.setManaged(false);
 
-        Label resultLabel = new Label();
-        Label importStatus = new Label();
-
         addButton.setOnAction(_ -> {
-            try {
-                String name = nameField.getText();
-                int qty = Integer.parseInt(qtyField.getText());
-                int expectedQty = Integer.parseInt(expectedQtyField.getText());
-                double cost = Double.parseDouble(costField.getText());
-                Category category = categoryBox.getValue();
-                String location = locationField.getText();
+            String name = nameField.getText().trim();
+            String qtyText = qtyField.getText().trim();
+            String expectedQtyText = expectedQtyField.getText().trim();
+            String costText = costField.getText().trim();
+            Category category = categoryBox.getValue();
+            String location = locationField.getText().trim();
 
-                if (category == null) {
-                    resultLabel.setText("Please select a category.");
-                    return;
-                }
-
-                int result = ProductManager.addProduct(name, qty, expectedQty, cost, category, location);
-                if (result == ErrorCodes.OK) {
-                    resultLabel.setText("Product added!");
-                    nameField.clear();
-                    qtyField.clear();
-                    expectedQtyField.clear();
-                    costField.clear();
-                    locationField.clear();
-                    categoryBox.getSelectionModel().clearSelection();
-
-                    viewProductsButton.setVisible(true);
-                    viewProductsButton.setManaged(true);
-                } else {
-                    resultLabel.setText("Error code: " + result);
-                }
-            } catch (Exception ex) {
-                resultLabel.setText("Invalid input: " + ex.getMessage());
+            if (name.isEmpty()) {
+                ProductManager.printValidationError(ErrorCodes.NAME_EMPTY);
+                return;
             }
+
+            int qty;
+            try {
+                qty = Integer.parseInt(qtyText);
+            } catch (NumberFormatException e) {
+                ProductManager.showError("Invalid Quantity", "Quantity must be a whole number.");
+                return;
+            }
+
+            int expectedQty;
+            try {
+                expectedQty = Integer.parseInt(expectedQtyText);
+            } catch (NumberFormatException e) {
+                ProductManager.showError("Invalid Expected Quantity", "Expected Quantity must be a whole number.");
+                return;
+            }
+
+            double cost;
+            try {
+                cost = Double.parseDouble(costText);
+            } catch (NumberFormatException e) {
+                ProductManager.showError("Invalid Cost", "Estimated Cost must be a valid number.");
+                return;
+            }
+
+            if (category == null) {
+                ProductManager.showError("Missing Category", "Please select a product category.");
+                return;
+            }
+
+            if (location.isEmpty()) {
+                ProductManager.printValidationError(ErrorCodes.NAME_EMPTY);
+                return;
+            }
+
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("Confirm Product Addition");
+            confirmation.setHeaderText("Are you sure you want to add this product?");
+            confirmation.setContentText("Product: " + name);
+
+
+            confirmation.showAndWait().ifPresent(response -> {
+                if (response.getButtonData().isDefaultButton()) {
+                    int result = ProductManager.addProduct(name, qty, expectedQty, cost, category, location);
+                    if (result == ErrorCodes.OK) {
+                        ProductManager.showSuccess("Success", "Product added successfully!");
+
+                        nameField.clear();
+                        qtyField.clear();
+                        expectedQtyField.clear();
+                        costField.clear();
+                        locationField.clear();
+                        categoryBox.getSelectionModel().clearSelection();
+
+                        viewProductsButton.setVisible(true);
+                        viewProductsButton.setManaged(true);
+                    } else {
+                        Alert error = new Alert(Alert.AlertType.ERROR);
+                        error.setTitle("Error");
+                        error.setHeaderText("Could not add product");
+                        error.setContentText("Error code: " + result);
+                        error.showAndWait();
+                        ProductManager.printValidationError(result);
+                    }
+                }
+            });
         });
 
         importButton.setOnAction(_ -> {
@@ -96,11 +139,11 @@ public class AddProductScreen {
             if (file != null) {
                 boolean success = ProductManager.addProductFromFile(file);
                 if (success) {
-                    importStatus.setText("Products loaded successfully!");
+                    ProductManager.showSuccess("Success", "Product Added Successfully!");
                     viewProductsButton.setVisible(true);
                     viewProductsButton.setManaged(true);
                 } else {
-                    importStatus.setText("Failed to import. Check file format.");
+                    ProductManager.showError("Import Failed", "Product import failed. Check file format.");
                 }
             }
         });
@@ -112,9 +155,7 @@ public class AddProductScreen {
                 title,
                 form,
                 addButton,
-                resultLabel,
                 importButton,
-                importStatus,
                 viewProductsButton,
                 backButton
         );
