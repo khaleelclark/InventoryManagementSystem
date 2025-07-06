@@ -4,6 +4,15 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import src.screens.*;
 
+
+/**
+ * Khaleel Zindel Clark
+ * CEN 3024 - Software Development 1
+ * July 5, 2025
+ * ScreenController.java
+ * This class holds the logic for switching between different
+ * UI screens.
+ */
 public class ScreenController {
     private final Stage stage;
 
