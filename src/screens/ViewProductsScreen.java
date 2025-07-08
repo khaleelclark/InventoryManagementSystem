@@ -16,7 +16,7 @@ import src.ScreenController;
  * July 5th, 2025
  * ViewProductsScreen.java
  * This class creates the view products screen and holds
- * all of the ui logic for viewing products in the inventory.
+ * all the ui logic for viewing products in the inventory.
  */
 public class ViewProductsScreen {
     private final VBox layout;
@@ -27,30 +27,30 @@ public class ViewProductsScreen {
 
         TableView<Product> productTable = new TableView<>();
 
-        TableColumn<Product, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Product, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Product, Integer> qtyCol = new TableColumn<>("Quantity");
-        qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        TableColumn<Product, Integer> quantityColumn = new TableColumn<>("Quantity");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        TableColumn<Product, Integer> expectedCol = new TableColumn<>("Expected Quantity");
-        expectedCol.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
+        TableColumn<Product, Integer> expectedQuantityColumn = new TableColumn<>("Expected Quantity");
+        expectedQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
 
-        TableColumn<Product, Double> costCol = new TableColumn<>("Estimated Cost");
-        costCol.setCellValueFactory(new PropertyValueFactory<>("estimatedCost"));
+        TableColumn<Product, Double> costColumn = new TableColumn<>("Estimated Cost");
+        costColumn.setCellValueFactory(new PropertyValueFactory<>("estimatedCost"));
 
-        TableColumn<Product, String> categoryCol = new TableColumn<>("Category");
-        categoryCol.setCellValueFactory(cellData ->
+        TableColumn<Product, String> categoryColumn = new TableColumn<>("Category");
+        categoryColumn.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(
                         cellData.getValue().getCategory().getCategoryName()));
 
-        TableColumn<Product, String> locationCol = new TableColumn<>("Location");
-        locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        TableColumn<Product, String> locationColumn = new TableColumn<>("Location");
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         productTable.setPrefHeight(300);
         productTable.setPrefWidth(500);
         VBox.setVgrow(productTable, Priority.ALWAYS);
-        productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
+        productTable.getColumns().addAll(nameColumn, quantityColumn, expectedQuantityColumn, costColumn, categoryColumn, locationColumn);
         ProductList products = ProductManager.getProducts();
         productTable.getItems().setAll(products);
 

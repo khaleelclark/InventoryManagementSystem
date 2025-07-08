@@ -26,14 +26,14 @@ public class AddProductScreen {
         Label title = new Label("Add Product");
 
         TextField nameField = new TextField();
-        TextField qtyField = new TextField();
+        TextField quantityField = new TextField();
         TextField expectedQtyField = new TextField();
         TextField costField = new TextField();
         ComboBox<Category> categoryBox = new ComboBox<>();
         TextField locationField = new TextField();
 
         nameField.setPromptText("Product Name");
-        qtyField.setPromptText("Quantity");
+        quantityField.setPromptText("Quantity");
         expectedQtyField.setPromptText("Expected Quantity");
         costField.setPromptText("Estimated Cost");
         locationField.setPromptText("Location");
@@ -45,7 +45,7 @@ public class AddProductScreen {
         form.setVgap(10);
         form.setPadding(new Insets(10));
         form.addRow(0, new Label("Name:"), nameField);
-        form.addRow(1, new Label("Quantity:"), qtyField);
+        form.addRow(1, new Label("Quantity:"), quantityField);
         form.addRow(2, new Label("Expected Quantity:"), expectedQtyField);
         form.addRow(3, new Label("Estimated Cost:"), costField);
         form.addRow(4, new Label("Category:"), categoryBox);
@@ -61,7 +61,7 @@ public class AddProductScreen {
 
         addButton.setOnAction(_ -> {
             String name = nameField.getText().trim();
-            String qtyText = qtyField.getText().trim();
+            String quantityText = quantityField.getText().trim();
             String expectedQtyText = expectedQtyField.getText().trim();
             String costText = costField.getText().trim();
             Category category = categoryBox.getValue();
@@ -72,9 +72,9 @@ public class AddProductScreen {
                 return;
             }
 
-            int qty;
+            int quantity;
             try {
-                qty = Integer.parseInt(qtyText);
+                quantity = Integer.parseInt(quantityText);
             } catch (NumberFormatException e) {
                 ProductManager.showError("Invalid Quantity", "Quantity must be a whole number.");
                 return;
@@ -114,12 +114,12 @@ public class AddProductScreen {
 
             confirmation.showAndWait().ifPresent(response -> {
                 if (response.getButtonData().isDefaultButton()) {
-                    int result = ProductManager.addProduct(name, qty, expectedQty, cost, category, location);
+                    int result = ProductManager.addProduct(name, quantity, expectedQty, cost, category, location);
                     if (result == ErrorCodes.OK) {
                         ProductManager.showSuccess("Success", "Product added successfully!");
 
                         nameField.clear();
-                        qtyField.clear();
+                        quantityField.clear();
                         expectedQtyField.clear();
                         costField.clear();
                         locationField.clear();

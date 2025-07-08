@@ -29,26 +29,26 @@ public class UpdateProductScreen {
         productTable.setItems(FXCollections.observableArrayList(ProductManager.getProducts()));
         VBox.setVgrow(productTable, Priority.ALWAYS);
 
-        TableColumn<Product, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Product, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Product, Integer> qtyCol = new TableColumn<>("Quantity");
-        qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        TableColumn<Product, Integer> quantityColumn = new TableColumn<>("Quantity");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        TableColumn<Product, Integer> expectedCol = new TableColumn<>("Expected Qty");
-        expectedCol.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
+        TableColumn<Product, Integer> expectedQuantityColumn = new TableColumn<>("Expected Qty");
+        expectedQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
 
-        TableColumn<Product, Double> costCol = new TableColumn<>("Est. Cost");
-        costCol.setCellValueFactory(new PropertyValueFactory<>("estimatedCost"));
+        TableColumn<Product, Double> costColumn = new TableColumn<>("Est. Cost");
+        costColumn.setCellValueFactory(new PropertyValueFactory<>("estimatedCost"));
 
-        TableColumn<Product, String> categoryCol = new TableColumn<>("Category");
-        categoryCol.setCellValueFactory(cellData ->
+        TableColumn<Product, String> categoryColumn = new TableColumn<>("Category");
+        categoryColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCategory().getCategoryName()));
 
-        TableColumn<Product, String> locationCol = new TableColumn<>("Location");
-        locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        TableColumn<Product, String> locationColumn = new TableColumn<>("Location");
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
 
-        productTable.getColumns().addAll(nameCol, qtyCol, expectedCol, costCol, categoryCol, locationCol);
+        productTable.getColumns().addAll(nameColumn, quantityColumn, expectedQuantityColumn, costColumn, categoryColumn, locationColumn);
         ProductList products = ProductManager.getProducts();
 
         GridPane form = new GridPane();
@@ -57,14 +57,14 @@ public class UpdateProductScreen {
         form.setPadding(new Insets(10));
 
         TextField nameField = new TextField();
-        TextField qtyField = new TextField();
+        TextField quantityField = new TextField();
         TextField expectedQtyField = new TextField();
         TextField costField = new TextField();
         ComboBox<Category> categoryBox = new ComboBox<>(FXCollections.observableArrayList(Category.values()));
         TextField locationField = new TextField();
 
         form.addRow(0, new Label("Name:"), nameField);
-        form.addRow(1, new Label("Quantity:"), qtyField);
+        form.addRow(1, new Label("Quantity:"), quantityField);
         form.addRow(2, new Label("Expected Qty:"), expectedQtyField);
         form.addRow(3, new Label("Est. Cost:"), costField);
         form.addRow(4, new Label("Category:"), categoryBox);
@@ -86,7 +86,7 @@ public class UpdateProductScreen {
             Product selected = productTable.getSelectionModel().getSelectedItem();
             if (selected != null) {
                 nameField.setText(selected.getName());
-                qtyField.setText(String.valueOf(selected.getQuantity()));
+                quantityField.setText(String.valueOf(selected.getQuantity()));
                 expectedQtyField.setText(String.valueOf(selected.getExpectedQuantity()));
                 costField.setText(String.valueOf(selected.getEstimatedCost()));
                 categoryBox.setValue(selected.getCategory());
@@ -113,22 +113,22 @@ public class UpdateProductScreen {
                     selected.setName(name);
                 }
 
-                String qtyStr = qtyField.getText().trim();
-                if (!qtyStr.isBlank()) {
-                    int qty = Integer.parseInt(qtyStr);
-                    if (qty != selected.getQuantity()) {
-                        int code = ProductManager.isValidQuantity(qty);
+                String quantityString = quantityField.getText().trim();
+                if (!quantityString.isBlank()) {
+                    int quantity = Integer.parseInt(quantityString);
+                    if (quantity != selected.getQuantity()) {
+                        int code = ProductManager.isValidQuantity(quantity);
                         if (code != ErrorCodes.OK) {
                             ProductManager.printValidationError(code);
                             return;
                         }
-                        selected.setQuantity(qty);
+                        selected.setQuantity(quantity);
                     }
                 }
 
-                String expectedStr = expectedQtyField.getText().trim();
-                if (!expectedStr.isBlank()) {
-                    int expected = Integer.parseInt(expectedStr);
+                String expectedString = expectedQtyField.getText().trim();
+                if (!expectedString.isBlank()) {
+                    int expected = Integer.parseInt(expectedString);
                     if (expected != selected.getExpectedQuantity()) {
                         int code = ProductManager.isValidQuantity(expected);
                         if (code != ErrorCodes.OK) {

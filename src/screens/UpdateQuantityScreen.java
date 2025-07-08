@@ -28,17 +28,16 @@ public class UpdateQuantityScreen {
         productTable.setItems(FXCollections.observableArrayList(ProductManager.getProducts()));
         VBox.setVgrow(productTable, Priority.ALWAYS);
 
-        TableColumn<Product, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Product, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Product, Integer> qtyCol = new TableColumn<>("Quantity");
-        qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        TableColumn<Product, Integer> quantityColumn = new TableColumn<>("Quantity");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        TableColumn<Product, Integer> expectedCol = new TableColumn<>("Expected Qty");
-        expectedCol.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
+        TableColumn<Product, Integer> expectedQuantityColumn = new TableColumn<>("Expected Qty");
+        expectedQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
 
-
-        productTable.getColumns().addAll(nameCol, qtyCol, expectedCol);
+        productTable.getColumns().addAll(nameColumn, quantityColumn, expectedQuantityColumn);
         ProductList products = ProductManager.getProducts();
 
         GridPane form = new GridPane();
@@ -47,12 +46,12 @@ public class UpdateQuantityScreen {
         form.setPadding(new Insets(10));
 
         TextField nameField = new TextField();
-        TextField qtyField = new TextField();
-        TextField expectedQtyField = new TextField();
+        TextField quantityField = new TextField();
+        TextField expectedQuantityField = new TextField();
 
         form.addRow(0, new Label("Name:"), nameField);
-        form.addRow(1, new Label("Quantity:"), qtyField);
-        form.addRow(2, new Label("Expected Qty:"), expectedQtyField);
+        form.addRow(1, new Label("Quantity:"), quantityField);
+        form.addRow(2, new Label("Expected Quantity:"), expectedQuantityField);
 
         Button updateButton = new Button("Update Product");
 
@@ -70,8 +69,8 @@ public class UpdateQuantityScreen {
             Product selected = productTable.getSelectionModel().getSelectedItem();
             if (selected != null) {
                 nameField.setText(selected.getName());
-                qtyField.setText(String.valueOf(selected.getQuantity()));
-                expectedQtyField.setText(String.valueOf(selected.getExpectedQuantity()));
+                quantityField.setText(String.valueOf(selected.getQuantity()));
+                expectedQuantityField.setText(String.valueOf(selected.getExpectedQuantity()));
             }
         });
         updateButton.setOnAction(_ -> {
@@ -92,22 +91,22 @@ public class UpdateQuantityScreen {
                     selected.setName(name);
                 }
 
-                String qtyStr = qtyField.getText().trim();
-                if (!qtyStr.isBlank()) {
-                    int qty = Integer.parseInt(qtyStr);
-                    if (qty != selected.getQuantity()) {
-                        int code = ProductManager.isValidQuantity(qty);
+                String quantityString = quantityField.getText().trim();
+                if (!quantityString.isBlank()) {
+                    int quantity = Integer.parseInt(quantityString);
+                    if (quantity != selected.getQuantity()) {
+                        int code = ProductManager.isValidQuantity(quantity);
                         if (code != ErrorCodes.OK) {
                             ProductManager.printValidationError(code);
                             return;
                         }
-                        selected.setQuantity(qty);
+                        selected.setQuantity(quantity);
                     }
                 }
 
-                String expectedStr = expectedQtyField.getText().trim();
-                if (!expectedStr.isBlank()) {
-                    int expected = Integer.parseInt(expectedStr);
+                String expectedString = expectedQuantityField.getText().trim();
+                if (!expectedString.isBlank()) {
+                    int expected = Integer.parseInt(expectedString);
                     if (expected != selected.getExpectedQuantity()) {
                         int code = ProductManager.isValidQuantity(expected);
                         if (code != ErrorCodes.OK) {
