@@ -54,24 +54,18 @@ public class HomeScreen {
             alert.showAndWait();
         });
 
-        Label title = new Label("Welcome to Zindel's Inventory Management System");
-        title.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
-
         Label description = new Label("Please select from one of the following options below:");
-        description.setStyle("-fx-font-weight: bold;");
+        description.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
         description.setPadding(new Insets(10, 10, 10, 10));
 
-        layout.add(title, 0, 0, 2, 1);
-        layout.add(description, 0, 1, 2, 1);
-
+        layout.add(description, 0, 0, 2, 1);
         layout.add(addButton, 0, 2);
         layout.add(viewButton, 1, 2);
         layout.add(updateButton, 0, 3);
         layout.add(removeButton, 1, 3);
         layout.add(updateQuantityButton, 0, 4);
         layout.add(understockedProductsButton, 1, 4);
-        layout.add(calculateInvEstimateButton, 0, 5, 2, 1); // center-aligned, spans 2 columns
-
+        layout.add(calculateInvEstimateButton, 0, 5, 2, 1);
     }
 
     public Parent getView() {

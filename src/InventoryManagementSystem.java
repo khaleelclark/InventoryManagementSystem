@@ -19,8 +19,15 @@ public class InventoryManagementSystem extends Application {
     @Override
     public void start(Stage primaryStage) {
         ScreenController controller = new ScreenController(primaryStage);
-        controller.activate("home");
+        controller.activate("connection");
     }
+
+    @Override
+    public void stop() {
+        DatabaseManager.close();
+        System.out.println("App closed, database connection shut down.");
+    }
+
 
     public static void main(String[] args) {
         launch(args);

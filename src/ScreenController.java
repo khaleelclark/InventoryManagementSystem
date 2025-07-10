@@ -22,6 +22,9 @@ public class ScreenController {
 
     public void activate(String screenName) {
         switch (screenName.toLowerCase()) {
+            case "connection":
+                stage.setScene(new Scene(new ConnectionScreen(this).getView(), 600, 400));
+                break;
             case "home":
                 stage.setScene(new Scene(new HomeScreen(this).getView(), 600, 400));
                 break;
