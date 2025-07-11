@@ -262,6 +262,45 @@ public class ProductManager {
                 .orElse(null);
     }
 
+    public static int updateProduct(String productName, int quantity, int expectedQuantity, double estimatedCost, Category category, String location, ProductList productList) {
+        if (!containsProductWithName(productName, productList)) {
+            return ErrorCodes.NOT_FOUND;
+        }
+
+        int nameCode = isValidProductName(productName);
+        if (nameCode != ErrorCodes.OK) return nameCode;
+
+        int quantityCode = isValidQuantity(quantity);
+        if (quantityCode != ErrorCodes.OK) return quantityCode;
+
+        int expectedCode = isValidQuantity(expectedQuantity);
+        if (expectedCode != ErrorCodes.OK) return expectedCode;
+
+        int costCode = isValidEstimatedCost(estimatedCost);
+        if (costCode != ErrorCodes.OK) return costCode;
+
+        int locationCode = isValidProductName(location);
+        if (locationCode != ErrorCodes.OK) return locationCode;
+
+        for (Product p : productList) {
+            if (p.getName().equalsIgnoreCase(productName)) {
+                Product updated = new Product(
+                        p.getName(),
+                        quantity,
+                        expectedQuantity,
+                        estimatedCost,
+                        category,
+                        location
+                );
+                DatabaseManager.updateProduct(updated);
+                products = DatabaseManager.loadProducts();
+                return ErrorCodes.OK;
+            }
+        }
+        return ErrorCodes.NOT_UPDATED;
+    }
+
+
     /**
      * method: updateProductQuantityDirectly
      * parameters: String productName, int newQuantity
@@ -276,7 +315,7 @@ public class ProductManager {
             if (p.getName().equalsIgnoreCase(productName)) {
                 int code = isValidQuantity(newQuantity);
                 if (code != ErrorCodes.OK) return code;
-                p.setQuantity(newQuantity); // remove and add update method from DatabaseManager
+                DatabaseManager.updateQuantity(newQuantity, p.getName());
                 products = DatabaseManager.loadProducts();
                 return ErrorCodes.OK;
             }

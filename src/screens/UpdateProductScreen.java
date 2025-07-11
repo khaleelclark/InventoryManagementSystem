@@ -55,14 +55,14 @@ public class UpdateProductScreen {
         form.setVgap(10);
         form.setPadding(new Insets(10));
 
-        TextField nameField = new TextField();
+        Label name = new Label();
         TextField quantityField = new TextField();
         TextField expectedQtyField = new TextField();
         TextField costField = new TextField();
         ComboBox<Category> categoryBox = new ComboBox<>(FXCollections.observableArrayList(Category.values()));
         TextField locationField = new TextField();
 
-        form.addRow(0, new Label("Name:"), nameField);
+        form.addRow(0, new Label("Product Name:"), name);
         form.addRow(1, new Label("Quantity:"), quantityField);
         form.addRow(2, new Label("Expected Qty:"), expectedQtyField);
         form.addRow(3, new Label("Est. Cost:"), costField);
@@ -84,7 +84,7 @@ public class UpdateProductScreen {
         productTable.setOnMouseClicked(_ -> {
             Product selected = productTable.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                nameField.setText(selected.getName());
+                name.setText(selected.getName());
                 quantityField.setText(String.valueOf(selected.getQuantity()));
                 expectedQtyField.setText(String.valueOf(selected.getExpectedQuantity()));
                 costField.setText(String.valueOf(selected.getEstimatedCost()));
@@ -93,90 +93,80 @@ public class UpdateProductScreen {
             }
         });
 
-
         updateButton.setOnAction(_ -> {
             Product selected = productTable.getSelectionModel().getSelectedItem();
             if (selected == null) {
                 ProductManager.showError("No Selection", "Please select a product to update");
                 return;
             }
+            String productName = selected.getName();
 
             try {
-                String name = nameField.getText().trim();
-                if (!name.isBlank() && !name.equals(selected.getName())) {
-                    int code = ProductManager.isValidProductName(name);
-                    if (code != ErrorCodes.OK) {
-                        ProductManager.printValidationError(code);
-                        return;
-                    }
-                    selected.setName(name);
-                }
-
-                String quantityString = quantityField.getText().trim();
-                if (!quantityString.isBlank()) {
-                    int quantity = Integer.parseInt(quantityString);
-                    if (quantity != selected.getQuantity()) {
-                        int code = ProductManager.isValidQuantity(quantity);
-                        if (code != ErrorCodes.OK) {
-                            ProductManager.printValidationError(code);
-                            return;
-                        }
-                        selected.setQuantity(quantity);
-                    }
-                }
-
-                String expectedString = expectedQtyField.getText().trim();
-                if (!expectedString.isBlank()) {
-                    int expected = Integer.parseInt(expectedString);
-                    if (expected != selected.getExpectedQuantity()) {
-                        int code = ProductManager.isValidQuantity(expected);
-                        if (code != ErrorCodes.OK) {
-                            ProductManager.printValidationError(code);
-                            return;
-                        }
-                        selected.setExpectedQuantity(expected);
-                    }
-                }
-
+                String quantityStr = quantityField.getText().trim();
+                String expectedStr = expectedQtyField.getText().trim();
                 String costStr = costField.getText().trim();
-                if (!costStr.isBlank()) {
-                    double cost = Double.parseDouble(costStr);
-                    if (cost != selected.getEstimatedCost()) {
-                        int code = ProductManager.isValidEstimatedCost(cost);
-                        if (code != ErrorCodes.OK) {
-                            ProductManager.printValidationError(code);
-                            return;
-                        }
-                        selected.setEstimatedCost(cost);
-                    }
-                }
-
                 Category category = categoryBox.getValue();
-                if (category != null && category != selected.getCategory()) {
-                    selected.setCategory(category);
-                }
-
                 String location = locationField.getText().trim();
-                if (!location.isBlank() && !location.equals(selected.getLocation())) {
-                    int code = ProductManager.isValidProductName(location);
-                    if (code != ErrorCodes.OK) {
-                        ProductManager.printValidationError(code);
-                        return;
-                    }
-                    selected.setLocation(location);
+
+                int nameCode = ProductManager.isValidProductName(productName);
+                int quantityCode = ProductManager.isValidQuantity(Integer.parseInt(quantityStr));
+                int expectedCode = ProductManager.isValidQuantity(Integer.parseInt(expectedStr));
+                int costCode = ProductManager.isValidEstimatedCost(Double.parseDouble(costStr));
+                int locationCode = ProductManager.isValidProductName(location);
+
+                if (nameCode != ErrorCodes.OK) {
+                    ProductManager.printValidationError(nameCode);
+                    return;
+                }
+                if (quantityCode != ErrorCodes.OK) {
+                    ProductManager.printValidationError(quantityCode);
+                    return;
+                }
+                if (expectedCode != ErrorCodes.OK) {
+                    ProductManager.printValidationError(expectedCode);
+                    return;
+                }
+                if (costCode != ErrorCodes.OK) {
+                    ProductManager.printValidationError(costCode);
+                    return;
+                }
+                if (locationCode != ErrorCodes.OK) {
+                    ProductManager.printValidationError(locationCode);
+                    return;
                 }
 
-                productTable.getItems().setAll(ProductManager.getProducts());
+                int code = ProductManager.updateProduct(
+                        productName,
+                        Integer.parseInt(quantityStr),
+                        Integer.parseInt(expectedStr),
+                        Double.parseDouble(costStr),
+                        category,
+                        location,
+                        ProductManager.getProducts()
+                );
+
+                if (code != ErrorCodes.OK) {
+                    ProductManager.printValidationError(code);
+                    return;
+                }
+
+                ProductList updatedProducts = DatabaseManager.loadProducts();
+                productTable.getItems().setAll(updatedProducts);
                 productTable.refresh();
-
                 ProductManager.showSuccess("Success", "Product updated!");
-
+                quantityField.clear();
+                expectedQtyField.clear();
+                costField.clear();
+                categoryBox.getSelectionModel().clearSelection();
+                locationField.clear();
+                
             } catch (NumberFormatException e) {
                 ProductManager.showError("Input Error", "Quantity and Expected Quantity must be whole numbers.");
             } catch (Exception ex) {
                 ProductManager.showError("Invalid input", "Please check fields.");
             }
         });
+
 
         Button backButton = new Button("Back to Home");
         backButton.setOnAction(_ -> controller.activate("home"));

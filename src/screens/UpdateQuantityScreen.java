@@ -34,10 +34,7 @@ public class UpdateQuantityScreen {
         TableColumn<Product, Integer> quantityColumn = new TableColumn<>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        TableColumn<Product, Integer> expectedQuantityColumn = new TableColumn<>("Expected Qty");
-        expectedQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("expectedQuantity"));
-
-        productTable.getColumns().addAll(nameColumn, quantityColumn, expectedQuantityColumn);
+        productTable.getColumns().addAll(nameColumn, quantityColumn);
         ProductList products = ProductManager.getProducts();
 
         GridPane form = new GridPane();
@@ -45,13 +42,11 @@ public class UpdateQuantityScreen {
         form.setVgap(10);
         form.setPadding(new Insets(10));
 
-        TextField nameField = new TextField();
+        Label name = new Label("");
         TextField quantityField = new TextField();
-        TextField expectedQuantityField = new TextField();
 
-        form.addRow(0, new Label("Name:"), nameField);
+        form.addRow(0, new Label("Product Name:"), name);
         form.addRow(1, new Label("Quantity:"), quantityField);
-        form.addRow(2, new Label("Expected Quantity:"), expectedQuantityField);
 
         Button updateButton = new Button("Update Product");
 
@@ -68,9 +63,8 @@ public class UpdateQuantityScreen {
         productTable.setOnMouseClicked(_ -> {
             Product selected = productTable.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                nameField.setText(selected.getName());
+                name.setText(selected.getName());
                 quantityField.setText(String.valueOf(selected.getQuantity()));
-                expectedQuantityField.setText(String.valueOf(selected.getExpectedQuantity()));
             }
         });
         updateButton.setOnAction(_ -> {
@@ -81,16 +75,6 @@ public class UpdateQuantityScreen {
             }
 
             try {
-                String name = nameField.getText().trim();
-                if (!name.isBlank() && !name.equals(selected.getName())) {
-                    int code = ProductManager.isValidProductName(name);
-                    if (code != ErrorCodes.OK) {
-                        ProductManager.printValidationError(code);
-                        return;
-                    }
-                    selected.setName(name);
-                }
-
                 String quantityString = quantityField.getText().trim();
                 if (!quantityString.isBlank()) {
                     int quantity = Integer.parseInt(quantityString);
@@ -100,25 +84,12 @@ public class UpdateQuantityScreen {
                             ProductManager.printValidationError(code);
                             return;
                         }
-                        selected.setQuantity(quantity);
+                        ProductManager.updateProductQuantityDirectly(selected.getName(), quantity, products);
+                        ProductList updatedProducts = DatabaseManager.loadProducts();
+                        productTable.getItems().setAll(updatedProducts);
+                        productTable.refresh();
                     }
                 }
-
-                String expectedString = expectedQuantityField.getText().trim();
-                if (!expectedString.isBlank()) {
-                    int expected = Integer.parseInt(expectedString);
-                    if (expected != selected.getExpectedQuantity()) {
-                        int code = ProductManager.isValidQuantity(expected);
-                        if (code != ErrorCodes.OK) {
-                            ProductManager.printValidationError(code);
-                            return;
-                        }
-                        selected.setExpectedQuantity(expected);
-                    }
-                }
-
-                productTable.getItems().setAll(products);
-                productTable.refresh();
 
                 ProductManager.showSuccess("Success", "Product updated!");
 

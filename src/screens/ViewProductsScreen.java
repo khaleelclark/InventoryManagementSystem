@@ -54,6 +54,7 @@ public class ViewProductsScreen {
         ProductList products = ProductManager.getProducts();
         productTable.getItems().setAll(products);
 
+
         if (products.isEmpty()) {
             title.setText("No Products Found. Add products now!");
             productTable.setVisible(false);

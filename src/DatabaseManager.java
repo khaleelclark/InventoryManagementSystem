@@ -72,13 +72,41 @@ public class DatabaseManager {
         }
     }
 
+    public static void updateProduct(Product product) {
+        String query = """
+                UPDATE products
+                SET quantity = ?,
+                    expected_quantity = ?,
+                    estimated_cost = ?,
+                    category = ?,
+                    location = ?
+                WHERE name = ?;
+                """;
 
-    public static void update() {
-        //TODO
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, product.getQuantity());
+            statement.setInt(2, product.getExpectedQuantity());
+            statement.setDouble(3, product.getEstimatedCost());
+            statement.setString(4, product.getCategory().name());
+            statement.setString(5, product.getLocation());
+            statement.setString(6, product.getName());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            ProductManager.showError("Database Error", e.getMessage());
+        }
     }
 
-    public static void updateQuantity() {
-        //TODO
+    public static void updateQuantity(int quantity, String name) {
+        String query = "UPDATE products SET quantity = ? WHERE name = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, quantity);
+            statement.setString(2, name);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            ProductManager.showError("Database Error", e.getMessage());
+        }
     }
 
     public static void deleteProduct(String name) {
