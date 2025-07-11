@@ -23,6 +23,7 @@ public class DatabaseManager {
         try {
             connection = DriverManager.getConnection(connectionString);
             ProductManager.showSuccess("Connection Successful", "Successfully connected to database.");
+            ProductManager.initialize();
             return true;
         } catch (SQLException e) {
             ProductManager.showError("Connection Error", e.getMessage() + "\nPlease check your file path and try again." + "\n" + connectionString);

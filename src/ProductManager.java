@@ -18,7 +18,13 @@ import java.util.stream.Stream;
  * This class creates houses the core logic for the IMS
  */
 public class ProductManager {
-    private static ProductList products = DatabaseManager.loadProducts();
+    //private static ProductList products = DatabaseManager.loadProducts();
+
+    private static ProductList products = new ProductList(); // Start empty
+
+    public static void initialize() {
+        products = DatabaseManager.loadProducts();
+    }
 
     /**
      * method: addProductFrom File
