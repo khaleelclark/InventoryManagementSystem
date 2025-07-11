@@ -18,10 +18,16 @@ import java.util.stream.Stream;
  * This class creates houses the core logic for the IMS
  */
 public class ProductManager {
-    //private static ProductList products = DatabaseManager.loadProducts();
-
     private static ProductList products = new ProductList(); // Start empty
 
+
+    /**
+     * method: initialize
+     * parameters: none
+     * return: void
+     * purpose: this method initializes the productList once
+     * a database connection has been established.
+     */
     public static void initialize() {
         products = DatabaseManager.loadProducts();
     }
@@ -268,6 +274,13 @@ public class ProductManager {
                 .orElse(null);
     }
 
+
+    /**
+     * method: updateProduct
+     * parameters: String productName, int quantity, int expectedQuantity, double estimatedCost, Category category, String location, ProductList productList
+     * return: int
+     * purpose: this method holds the business logic for updating all product attributes.
+     */
     public static int updateProduct(String productName, int quantity, int expectedQuantity, double estimatedCost, Category category, String location, ProductList productList) {
         if (!containsProductWithName(productName, productList)) {
             return ErrorCodes.NOT_FOUND;

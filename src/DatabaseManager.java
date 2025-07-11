@@ -7,6 +7,14 @@ public class DatabaseManager {
 
     private static Connection connection;
 
+
+    /**
+     * method: establishConnection
+     * parameters: String userFilePath
+     * return: boolean
+     * purpose: this method takes in a file path string from the user
+     * to establish a connection with the sqlite database.
+     */
     public static boolean establishConnection(String userFilePath) {
         String connectionString = "jdbc:sqlite:" + userFilePath;
 
@@ -32,6 +40,12 @@ public class DatabaseManager {
     }
 
 
+    /**
+     * method: loadProducts
+     * parameters: none
+     * return: ProductList
+     * purpose: this method loads in any products in the database.
+     */
     public static ProductList loadProducts() {
         String query = "SELECT * FROM products;";
         ProductList dbProductList = new ProductList();
@@ -57,6 +71,13 @@ public class DatabaseManager {
     }
 
 
+    /**
+     * method: insertProduct
+     * parameters: Product product
+     * return: void
+     * purpose: this method allows for products to be added
+     * to the sqlite database once connection is established.
+     */
     public static void insertProduct(Product product) {
         String query = "INSERT INTO products (name, quantity, expected_quantity, estimated_cost, category, location) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -73,6 +94,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * method: updateProduct
+     * parameters: Product product
+     * return: void
+     * purpose: this method allows for products to be updated
+     * within the sqlite database once connection is established.
+     */
     public static void updateProduct(Product product) {
         String query = """
                 UPDATE products
@@ -98,6 +126,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * method: updateQuantity
+     * parameters: int quantity, String name
+     * return: void
+     * purpose: this method allows for a products quantity to be updated
+     * within the sqlite database once connection is established.
+     */
     public static void updateQuantity(int quantity, String name) {
         String query = "UPDATE products SET quantity = ? WHERE name = ?";
 
@@ -110,6 +145,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * method: deleteProduct
+     * parameters: String name
+     * return: void
+     * purpose: this method allows for products to be deleted from
+     * the sqlite database once connection is established.
+     */
     public static void deleteProduct(String name) {
         String query = "DELETE FROM products WHERE name = ?;";
 
@@ -122,6 +164,13 @@ public class DatabaseManager {
     }
 
 
+    /**
+     * method: close
+     * parameters: none
+     * return: void
+     * purpose: this method allows for the program to
+     * end safely by closing teh database connection upon program exit.
+     */
     public static void close() {
         try {
             if (connection != null && !connection.isClosed()) {
