@@ -49,7 +49,6 @@ public class UpdateProductScreen {
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         productTable.getColumns().addAll(nameColumn, quantityColumn, expectedQuantityColumn, costColumn, categoryColumn, locationColumn);
-        ProductList products = ProductManager.getProducts();
 
         GridPane form = new GridPane();
         form.setHgap(10);
@@ -72,7 +71,7 @@ public class UpdateProductScreen {
 
         Button updateButton = new Button("Update Product");
 
-        if (products.isEmpty()) {
+        if (ProductManager.isEmpty()) {
             title.setText("No Products to update. Add some now!");
             form.setVisible(false);
             form.setManaged(false);

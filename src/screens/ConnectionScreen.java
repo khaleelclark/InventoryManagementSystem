@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import src.DatabaseManager;
 import src.ScreenController;
 
 public class ConnectionScreen {
@@ -24,7 +25,13 @@ public class ConnectionScreen {
         Button establishConnectionButton = new Button("Establish Connection");
         TextField establishConnectionTextField = new TextField();
 
-        establishConnectionButton.setOnAction(_ -> controller.activate("home"));
+        establishConnectionButton.setOnAction(_ -> {
+            if (DatabaseManager.establishConnection(establishConnectionTextField.getText())) {
+                controller.activate("home");
+            } else {
+                establishConnectionTextField.clear();
+            }
+        });
 
         Label title = new Label("Welcome to Zindel's Inventory Management System");
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");

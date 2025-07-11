@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * This class creates houses the core logic for the IMS
  */
 public class ProductManager {
-    private static final ProductList products = new ProductList();
+    private static ProductList products = DatabaseManager.loadProducts();
 
     /**
      * method: addProductFrom File
@@ -147,7 +147,8 @@ public class ProductManager {
         if (costCode != ErrorCodes.OK) return costCode;
 
         Product p = new Product(name, quantity, expectedQuantity, estimatedCost, category, location);
-        products.add(p);
+        DatabaseManager.insertProduct(p);
+        products = DatabaseManager.loadProducts();
         return ErrorCodes.OK;
     }
 
@@ -238,9 +239,10 @@ public class ProductManager {
         if (productList.isEmpty()) {
             return ErrorCodes.NO_PRODUCTS;
         }
-        for (int i = 0; i < productList.size(); i++) {
-            if (productList.get(i).getName().equalsIgnoreCase(name)) {
-                productList.remove(i);
+        for (Product product : productList) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                DatabaseManager.deleteProduct(name);
+                products = DatabaseManager.loadProducts();
                 return ErrorCodes.OK;
             }
         }
@@ -274,7 +276,8 @@ public class ProductManager {
             if (p.getName().equalsIgnoreCase(productName)) {
                 int code = isValidQuantity(newQuantity);
                 if (code != ErrorCodes.OK) return code;
-                p.setQuantity(newQuantity);
+                p.setQuantity(newQuantity); // remove and add update method from DatabaseManager
+                products = DatabaseManager.loadProducts();
                 return ErrorCodes.OK;
             }
         }
@@ -300,7 +303,11 @@ public class ProductManager {
      * purpose: this method returns a list of products for use by the ui.
      */
     public static ProductList getProducts() {
-        return products;
+        return (ProductList) products.clone();
+    }
+
+    public static boolean isEmpty() {
+        return products.isEmpty();
     }
 
 }
