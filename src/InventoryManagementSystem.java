@@ -14,6 +14,10 @@ package src;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * Main entry point for the Inventory Management System application.
+ * Sets up and activates the initial UI screen.
+ */
 public class InventoryManagementSystem extends Application {
 
     @Override
@@ -22,12 +26,15 @@ public class InventoryManagementSystem extends Application {
         controller.activate("connection");
     }
 
+    /**
+     * Called when the application is stopping.
+     * Closes the database connection gracefully.
+     */
     @Override
     public void stop() {
         DatabaseManager.close();
         System.out.println("App closed, database connection shut down.");
     }
-
 
     public static void main(String[] args) {
         launch(args);
