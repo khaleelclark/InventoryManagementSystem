@@ -10,9 +10,22 @@ import javafx.scene.layout.GridPane;
 import src.DatabaseManager;
 import src.ScreenController;
 
+/**
+ * ConnectionScreen is the first screen users see.
+ * It prompts them to enter the path to their SQLite database file and attempts to establish a connection.
+ * If successful, it redirects the user to the home screen.
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18th, 2025
+ */
 public class ConnectionScreen {
     private final GridPane layout;
 
+    /**
+     * Constructs a new ConnectionScreen.
+     *
+     * @param controller The ScreenController that handles switching between screens.
+     */
     public ConnectionScreen(ScreenController controller) {
         layout = new GridPane();
 
@@ -51,6 +64,11 @@ public class ConnectionScreen {
         layout.add(establishConnectionButton, 0, 4, 2, 1);
     }
 
+    /**
+     * Returns the JavaFX Parent node representing this screen's layout.
+     *
+     * @return the layout for this screen
+     */
     public Parent getView() {
         return layout;
     }
