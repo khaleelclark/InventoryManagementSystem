@@ -10,18 +10,28 @@ import javafx.geometry.Insets;
 import src.*;
 
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5th, 2025
- * UpdateQuantityScreen.java
- * This class creates the update quantity screen and holds
- * all the ui logic for updating a products quantity in the inventory.
+ * Represents the UI screen for updating the quantity of products in the inventory.
+ * <p>
+ * This class creates a JavaFX layout that displays a table of products with their current quantities,
+ * and a form that allows the user to select a product and update its quantity.
+ * It includes validation and error handling for input quantity updates,
+ * and a button to return to the home screen.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18th, 2025
  */
 public class UpdateQuantityScreen {
     private final VBox layout;
 
+    /**
+     * Constructs the update quantity screen with a given ScreenController.
+     * Initializes UI elements including a table of products, a form for updating quantity,
+     * and buttons for submitting changes or returning home.
+     *
+     * @param controller the ScreenController used to switch screens
+     */
     public UpdateQuantityScreen(ScreenController controller) {
-
         Label title = new Label("Update Product");
 
         TableView<Product> productTable = new TableView<>();
@@ -90,7 +100,6 @@ public class UpdateQuantityScreen {
                         productTable.refresh();
                     }
                 }
-
                 ProductManager.showSuccess("Success", "Product updated!");
 
             } catch (NumberFormatException e) {
@@ -107,7 +116,11 @@ public class UpdateQuantityScreen {
         layout.setPadding(new Insets(20));
         VBox.setVgrow(productTable, Priority.ALWAYS);
     }
-
+    /**
+     * Returns the root node of this screen's UI layout.
+     *
+     * @return the VBox containing the update quantity screen layout
+     */
     public VBox getView() {
         return layout;
     }
