@@ -11,18 +11,28 @@ import src.ProductManager;
 import src.ScreenController;
 
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5th, 2025
- * ViewProductsScreen.java
- * This class creates the view products screen and holds
- * all the ui logic for viewing products in the inventory.
+ * Represents the UI screen for viewing all products in the inventory.
+ * <p>
+ * This class builds a JavaFX layout displaying a table of all products
+ * retrieved from the ProductManager, including columns for name, quantity,
+ * expected quantity, estimated cost, category, and location.
+ * It also handles UI logic such as showing a message when no products are present,
+ * and provides a back button to navigate to the home screen.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18th, 2025
  */
 public class ViewProductsScreen {
     private final VBox layout;
 
+    /**
+     * Constructs the view products screen with a given ScreenController.
+     * The screen shows a table listing all products in the inventory.
+     *
+     * @param controller the ScreenController used to switch screens
+     */
     public ViewProductsScreen(ScreenController controller) {
-
         Label title = new Label("All Products: ");
 
         TableView<Product> productTable = new TableView<>();
@@ -54,7 +64,6 @@ public class ViewProductsScreen {
         ProductList products = ProductManager.getProducts();
         productTable.getItems().setAll(products);
 
-
         if (products.isEmpty()) {
             title.setText("No Products Found. Add products now!");
             productTable.setVisible(false);
@@ -70,6 +79,12 @@ public class ViewProductsScreen {
         layout.setStyle("-fx-padding: 20;");
     }
 
+
+    /**
+     * Returns the root node of this screen's UI layout.
+     *
+     * @return the JavaFX Parent node containing the screen layout
+     */
     public Parent getView() {
         return layout;
     }
