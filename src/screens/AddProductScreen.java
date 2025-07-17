@@ -8,19 +8,27 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import src.*;
 
+import java.awt.*;
 import java.io.File;
 
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5th, 2025
- * AddProductScreen.java
- * This class creates the add product screen and holds
- * all the ui logic for adding products to the inventory.
+ * Represents the screen where users can add products to the inventory manually or by importing from a file.
+ * <p>
+ * This class handles all UI logic for creating product entries, validating input,
+ * and interacting with the {@link ProductManager}.
+ * </p>
+ *
+ * <p>Author: Khaleel Zindel Clark</p>
+ * <p>Date: July 18th, 2025</p>
  */
 public class AddProductScreen {
     private final VBox layout;
 
+    /**
+     * Constructs the Add Product screen.
+     *
+     * @param controller the screen controller used to switch between screens
+     */
     public AddProductScreen(ScreenController controller) {
 
         Label title = new Label("Add Product");
@@ -171,6 +179,11 @@ public class AddProductScreen {
         layout.setPadding(new Insets(20));
     }
 
+    /**
+     * Returns the JavaFX view for rendering this screen.
+     *
+     * @return the root layout for this screen
+     */
     public Parent getView() {
         return layout;
     }
