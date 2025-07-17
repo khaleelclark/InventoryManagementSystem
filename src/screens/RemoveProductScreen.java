@@ -9,16 +9,29 @@ import src.ProductList;
 import src.ProductManager;
 import src.ScreenController;
 
+/**
+ * This class creates the Remove Product screen and handles
+ * all the UI logic for removing products from the inventory.
+ * <p>
+ * It displays a table of products with their details and allows
+ * the user to select and remove a product with confirmation.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 5, 2025
+ */
 public class RemoveProductScreen {
     private final VBox layout;
 
     /**
-     * Khaleel Zindel Clark
-     * CEN 3024 - Software Development 1
-     * July 5th, 2025
-     * RemoveProductScreen.java
-     * This class creates the remove product screen and holds
-     * all the ui logic for removing products from the inventory.
+     * Constructs the Remove Product screen UI.
+     * <p>
+     * Displays a table listing all products, a button to remove
+     * the selected product, and a back button to return to the home screen.
+     * If no products exist, it shows a message and disables removal.
+     * </p>
+     *
+     * @param controller the ScreenController for screen navigation
      */
     public RemoveProductScreen(ScreenController controller) {
 
@@ -71,6 +84,17 @@ public class RemoveProductScreen {
         layout.setStyle("-fx-padding: 20;");
     }
 
+    /**
+     * Creates and returns the Remove Product button with its event handler.
+     * <p>
+     * When clicked, the button checks if a product is selected,
+     * prompts the user for confirmation, and removes the product if confirmed.
+     * Alerts are shown for no selection, confirmation, and errors where applicable.
+     * </p>
+     *
+     * @param productTable the TableView displaying the list of products
+     * @return a configured Button that handles product removal
+     */
     private static Button getButton(TableView<Product> productTable) {
         Button removeButton = new Button("Remove Product");
         removeButton.setOnAction(_ -> {
@@ -109,6 +133,11 @@ public class RemoveProductScreen {
         return removeButton;
     }
 
+    /**
+     * Returns the root layout node containing all UI components of this screen.
+     *
+     * @return the VBox layout of the Remove Product screen
+     */
     public VBox getView() {
         return layout;
     }
