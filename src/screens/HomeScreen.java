@@ -10,18 +10,29 @@ import javafx.scene.layout.GridPane;
 import src.ProductManager;
 import src.ScreenController;
 
-
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5th, 2025
- * HomeScreen.java
- * This class creates the home screen and holds
- * all the ui logic entry points for managing the inventory.
+ * <p>
+ * Represents the main menu of the IMS.
+ * It provides navigation buttons to the features of the system, including
+ * adding, viewing, updating, and removing products, as well as viewing understocked items
+ * and estimating total inventory value.
+ * </p>
+ *
+ * <p>
+ * This class handles UI logic only and does not contain business logic.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18th, 2025
  */
 public class HomeScreen {
     private final GridPane layout;
 
+    /**
+     * Constructs the HomeScreen and initializes all the UI components.
+     *
+     * @param controller the ScreenController used to switch between different screens.
+     */
     public HomeScreen(ScreenController controller) {
         layout = new GridPane();
 
@@ -68,6 +79,12 @@ public class HomeScreen {
         layout.add(calculateInvEstimateButton, 0, 5, 2, 1);
     }
 
+
+    /**
+     * Returns the JavaFX node representing this screen's layout.
+     *
+     * @return the layout as a {@link Parent} node.
+     */
     public Parent getView() {
         return layout;
     }
