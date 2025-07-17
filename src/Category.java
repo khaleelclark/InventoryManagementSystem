@@ -46,5 +46,15 @@ public enum Category {
         return categoryName;
     }
 
+    /**
+     * Returns the string representation of the category,
+     * which is its user-friendly name.
+     *
+     * @return the category name as a String
+     */
+    public String getCategoryName() {
+        return categoryName;
+    }
+
 
 }
