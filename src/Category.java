@@ -1,14 +1,14 @@
 package src;
 
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5th, 2025
- * Category.java
- * This class creates an enumerator for the user to select
- * from predetermined categories
+ * Represents predefined product categories for the inventory system.
+ * <p>
+ * Each enum constant holds a user-friendly category name.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18th, 2025
  */
-
 public enum Category {
     FOOD_BEVERAGES("Food & Beverages"),
     PERSONAL_CARE("Personal Care & Toiletries"),
@@ -26,20 +26,21 @@ public enum Category {
 
     private final String categoryName;
 
+    /**
+     * Constructs a Category enum with a display name.
+     *
+     * @param categoryName the user-friendly name of the category
+     */
     Category(String categoryName) {
         this.categoryName = categoryName;
     }
 
     /**
-     * method: getCategoryName
-     * parameters: none
-     * return: String
-     * purpose: this method returns name of the category as a string
+     * Returns the string representation of the category,
+     * which is its user-friendly name.
+     *
+     * @return the category name as a String
      */
-    public String getCategoryName() {
-        return categoryName;
-    }
-
     @Override
     public String toString() {
         return categoryName;
