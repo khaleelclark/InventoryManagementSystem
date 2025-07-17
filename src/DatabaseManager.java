@@ -3,17 +3,26 @@ package src;
 import java.io.File;
 import java.sql.*;
 
+/**
+ * Manages the SQLite database connection and operations related to
+ * loading, inserting, updating, and deleting products in the inventory database.
+ * <p>
+ * This class handles the database connection and executes SQL queries
+ * to interact with the products table.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18, 2025
+ */
 public class DatabaseManager {
-
     private static Connection connection;
 
-
     /**
-     * method: establishConnection
-     * parameters: String userFilePath
-     * return: boolean
-     * purpose: this method takes in a file path string from the user
-     * to establish a connection with the sqlite database.
+     * Establishes a connection to the SQLite database at the specified file path.
+     * Validates that the file exists and is a proper ".db" file.
+     *
+     * @param userFilePath the file path to the SQLite database file
+     * @return true if the connection was successfully established; false otherwise
      */
     public static boolean establishConnection(String userFilePath) {
         String connectionString = "jdbc:sqlite:" + userFilePath;
@@ -39,12 +48,10 @@ public class DatabaseManager {
         }
     }
 
-
     /**
-     * method: loadProducts
-     * parameters: none
-     * return: ProductList
-     * purpose: this method loads in any products in the database.
+     * Loads all products from the database into a ProductList.
+     *
+     * @return a ProductList containing all products currently in the database
      */
     public static ProductList loadProducts() {
         String query = "SELECT * FROM products;";
@@ -70,13 +77,10 @@ public class DatabaseManager {
         return dbProductList;
     }
 
-
     /**
-     * method: insertProduct
-     * parameters: Product product
-     * return: void
-     * purpose: this method allows for products to be added
-     * to the sqlite database once connection is established.
+     * Inserts a new product record into the database.
+     *
+     * @param product the Product object to insert into the database
      */
     public static void insertProduct(Product product) {
         String query = "INSERT INTO products (name, quantity, expected_quantity, estimated_cost, category, location) VALUES (?, ?, ?, ?, ?, ?)";
@@ -95,11 +99,9 @@ public class DatabaseManager {
     }
 
     /**
-     * method: updateProduct
-     * parameters: Product product
-     * return: void
-     * purpose: this method allows for products to be updated
-     * within the sqlite database once connection is established.
+     * Updates all attributes of an existing product in the database.
+     *
+     * @param product the Product object with updated data
      */
     public static void updateProduct(Product product) {
         String query = """
@@ -127,11 +129,10 @@ public class DatabaseManager {
     }
 
     /**
-     * method: updateQuantity
-     * parameters: int quantity, String name
-     * return: void
-     * purpose: this method allows for a products quantity to be updated
-     * within the sqlite database once connection is established.
+     * Updates the quantity of a product in the database.
+     *
+     * @param quantity the new quantity to set
+     * @param name     the name of the product to update
      */
     public static void updateQuantity(int quantity, String name) {
         String query = "UPDATE products SET quantity = ? WHERE name = ?";
@@ -146,11 +147,9 @@ public class DatabaseManager {
     }
 
     /**
-     * method: deleteProduct
-     * parameters: String name
-     * return: void
-     * purpose: this method allows for products to be deleted from
-     * the sqlite database once connection is established.
+     * Deletes a product from the database by its name.
+     *
+     * @param name the name of the product to delete
      */
     public static void deleteProduct(String name) {
         String query = "DELETE FROM products WHERE name = ?;";
@@ -165,11 +164,8 @@ public class DatabaseManager {
 
 
     /**
-     * method: close
-     * parameters: none
-     * return: void
-     * purpose: this method allows for the program to
-     * end safely by closing teh database connection upon program exit.
+     * Closes the database connection if it is open.
+     * Should be called when the application is shutting down.
      */
     public static void close() {
         try {
@@ -180,5 +176,4 @@ public class DatabaseManager {
             ProductManager.showError("Error Closing Connection", e.getMessage());
         }
     }
-
 }
