@@ -11,33 +11,40 @@ import java.util.stream.Stream;
 
 
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5, 2025
  * ProductManager.java
- * This class creates houses the core logic for the IMS
+ *
+ * <p>Core logic handler for the Inventory Management System (IMS).
+ * This class provides methods for managing products, including adding,
+ * removing, updating, and validating product data.</p>
+ *
+ * <p>Author: Khaleel Zindel Clark<br>
+ * Course: CEN 3024 - Software Development 1<br>
+ * Date: July 18, 2025</p>
  */
-public class ProductManager {
-    private static ProductList products = new ProductList(); // Start empty
 
+public class ProductManager {
+    private static ProductList products = new ProductList();
 
     /**
-     * method: initialize
-     * parameters: none
-     * return: void
-     * purpose: this method initializes the productList once
-     * a database connection has been established.
+     * <p>Syncs the in-memory ProductList with the contents  the database.</p>
+     *
+     * <p>This method should be called after a database connection has been successfully established.
+     * It ensures that the in-memory data reflects the current state of the database.</p>
      */
     public static void initialize() {
         products = DatabaseManager.loadProducts();
     }
 
     /**
-     * method: addProductFrom File
-     * parameters: File file
-     * return: boolean
-     * purpose: this method holds the business logic for adding a product from a file.
+     * Adds products to the inventory from a file.
+     *
+     * <p>This method reads a properly formatted <code>.csv</code> or <code>.txt</code> file,
+     * validates its contents against business rules, and attempts to add each product to the system.</p>
+     *
+     * @param file the file containing product data
+     * @return {@code true} if at least one product was successfully added; {@code false} otherwise
      */
+
     public static boolean addProductFromFile(File file) {
         String filePath = file.getAbsolutePath().toLowerCase();
         if (!(filePath.endsWith(".csv") || filePath.endsWith(".txt"))) {
@@ -100,7 +107,6 @@ public class ProductManager {
                 } catch (Exception ex) {
                     System.err.println("Line " + lineNumber + ": " + ex.getMessage());
                 }
-
                 lineNumber++;
             }
             return successCount > 0;
@@ -112,10 +118,12 @@ public class ProductManager {
     }
 
     /**
-     * method: showError
-     * parameters: String title, String message
-     * return: void
-     * purpose: this method displays errors to the ui with custom text.
+     * Displays an error message to the user using a pop-up alert dialog.
+     *
+     * <p>This method creates and shows an error alert with a custom title and message.</p>
+     *
+     * @param title   the title of the error alert
+     * @param message the message to be displayed in the alert
      */
     public static void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -126,10 +134,12 @@ public class ProductManager {
     }
 
     /**
-     * method: showSuccess
-     * parameters: String title, String message
-     * return: void
-     * purpose: this method displays success messages to the ui with custom text.
+     * Displays a success message to the user using a pop-up alert dialog.
+     *
+     * <p>This method creates and shows an informational alert with a custom title and message.</p>
+     *
+     * @param title   the title of the success alert
+     * @param message the message to be displayed in the alert
      */
     public static void showSuccess(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -140,10 +150,19 @@ public class ProductManager {
     }
 
     /**
-     * method: addProduct
-     * parameters: String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location
-     * return: int
-     * purpose: this method holds the business logic for adding a product.
+     * Adds a new product to the database after validating input fields.
+     *
+     * <p>This method performs input validation for all fields and inserts the product
+     * into the database if all validations pass. It then refreshes the in-memory product list.</p>
+     *
+     * @param name             the name of the product
+     * @param quantity         the current quantity of the product
+     * @param expectedQuantity the expected quantity to maintain
+     * @param estimatedCost    the estimated cost of the product
+     * @param category         the category the product belongs to
+     * @param location         the storage location of the product
+     * @return an error code indicating the result of the operation; {@code ErrorCodes.OK} if successful,
+     *         or a specific validation error code otherwise
      */
     public static int addProduct(String name, int quantity, int expectedQuantity, double estimatedCost, Category category, String location) {
         int nameCode = isValidProductName(name);
@@ -165,11 +184,14 @@ public class ProductManager {
     }
 
     /**
-     * method: isValidProductName
-     * parameters: String name
-     * return: boolean
-     * purpose: this method checks user input strings for product names and
-     * locations to ensure they are in the correct format for the IMS
+     * Validates a product name to ensure it meets formatting requirements for the IMS.
+     *
+     * <p>This method checks if the given product name is not null, not empty, has a valid length,
+     * and only contains allowed characters (letters, numbers, spaces, hyphens, apostrophes, periods, and parentheses).</p>
+     *
+     * @param name the product name to validate
+     * @return an error code representing the result of the validation:
+     *         {@code ErrorCodes.OK} if valid, or a specific error code if invalid
      */
     public static int isValidProductName(String name) {
         if (name == null || name.trim().isEmpty()) return ErrorCodes.NAME_EMPTY;
@@ -180,34 +202,39 @@ public class ProductManager {
     }
 
     /**
-     * method: isValidQuantity
-     * parameters: int quantity
-     * return: int
-     * purpose: this method verifies user inputted quantity and estimated quantity
-     * aligns with the business rules for the application.
+     * Validates that a quantity value is within the acceptable range for the IMS.
+     *
+     * <p>This method ensures the quantity is between 0 and 100, inclusive,
+     * according to business rules.</p>
+     *
+     * @param quantity the quantity value to validate
+     * @return {@code ErrorCodes.OK} if the quantity is valid,
+     *         or {@code ErrorCodes.QUANTITY_OUT_OF_RANGE} if it falls outside the allowed range
      */
     public static int isValidQuantity(int quantity) {
         return (quantity >= 0 && quantity <= 100) ? ErrorCodes.OK : ErrorCodes.QUANTITY_OUT_OF_RANGE;
     }
 
     /**
-     * method: isValidEstimatedCost
-     * parameters: double cost
-     * return: int
-     * purpose: this method verifies user inputted cost aligns with the
-     * business rules for the application.
+     * Validates that an estimated cost value meets the IMS business rules.
+     *
+     * <p>This method checks that the cost is not negative, as negative values are not allowed.</p>
+     *
+     * @param cost the estimated cost value to validate
+     * @return {@code ErrorCodes.OK} if the cost is valid,
+     *         or {@code ErrorCodes.COST_NEGATIVE} if the cost is less than 0
      */
     public static int isValidEstimatedCost(double cost) {
         return cost >= 0 ? ErrorCodes.OK : ErrorCodes.COST_NEGATIVE;
     }
 
-
     /**
-     * method: printValidationError
-     * parameters: none
-     * return: void
-     * purpose: this method displays error messages based off
-     * of corresponding codes defined in the ErrorCodes class.
+     * Displays a user-friendly error message based on a validation error code.
+     *
+     * <p>This method maps predefined error codes from the {@code ErrorCodes} class to
+     * descriptive alert messages and displays them using a pop-up error dialog.</p>
+     *
+     * @param code the error code representing the validation failure
      */
     public static void printValidationError(int code) {
         switch (code) {
@@ -242,10 +269,17 @@ public class ProductManager {
     }
 
     /**
-     * method: removeProductByName
-     * parameters: String name
-     * return: int
-     * purpose: this method holds the business logic for removing products
+     * Removes a product from the database based on its name.
+     *
+     * <p>This method checks if the product list is empty, and if not, searches for a product
+     * with a matching name (case-insensitive). If found, the product is deleted from the database
+     * and the in-memory product list is refreshed.</p>
+     *
+     * @param name        the name of the product to remove
+     * @param productList the current list of products to search through
+     * @return {@code ErrorCodes.OK} if the product was successfully removed,
+     *         {@code ErrorCodes.NO_PRODUCTS} if the list is empty,
+     *         or {@code ErrorCodes.NOT_FOUND} if no matching product was found
      */
     public static int removeProduct(String name, ProductList productList) {
         if (productList.isEmpty()) {
@@ -262,10 +296,15 @@ public class ProductManager {
     }
 
     /**
-     * method: getProductByName
-     * parameters: String inputName
-     * return: Product
-     * purpose: this method returns the product with the name that matches a user's input
+     * Retrieves a product from the list that matches the given name.
+     *
+     * <p>This method searches the provided product list for a product whose name matches
+     * the user's input (case-insensitive). If a match is found, the product is returned;
+     * otherwise, {@code null} is returned.</p>
+     *
+     * @param productList the list of products to search
+     * @param inputName   the name of the product to find
+     * @return the matching {@code Product} if found; otherwise {@code null}
      */
     public static Product getProductByName(ProductList productList, String inputName) {
         return productList.stream()
@@ -274,12 +313,24 @@ public class ProductManager {
                 .orElse(null);
     }
 
-
     /**
-     * method: updateProduct
-     * parameters: String productName, int quantity, int expectedQuantity, double estimatedCost, Category category, String location, ProductList productList
-     * return: int
-     * purpose: this method holds the business logic for updating all product attributes.
+     * Updates all attributes of an existing product in the database.
+     *
+     * <p>This method performs validation on all provided fields. If validation passes and a product
+     * with the specified name exists, it updates the product in the database and refreshes the
+     * in-memory product list. Location is validated using the same rules as the product name.</p>
+     *
+     * @param productName     the name of the product to update
+     * @param quantity        the new quantity value
+     * @param expectedQuantity the new expected quantity value
+     * @param estimatedCost   the new estimated cost value
+     * @param category        the new category for the product
+     * @param location        the new storage location for the product
+     * @param productList     the list of current products to search and update
+     * @return {@code ErrorCodes.OK} if the product was successfully updated,
+     *         {@code ErrorCodes.NOT_FOUND} if the product was not found,
+     *         {@code ErrorCodes.NOT_UPDATED} if the update failed,
+     *         or a validation-specific error code for any invalid input
      */
     public static int updateProduct(String productName, int quantity, int expectedQuantity, double estimatedCost, Category category, String location, ProductList productList) {
         if (!containsProductWithName(productName, productList)) {
@@ -319,12 +370,20 @@ public class ProductManager {
         return ErrorCodes.NOT_UPDATED;
     }
 
-
     /**
-     * method: updateProductQuantityDirectly
-     * parameters: String productName, int newQuantity
-     * return: int
-     * purpose: this method holds the business logic for updating product quantities.
+     * Updates the quantity of a specified product directly in the database.
+     *
+     * <p>This method first checks if a product with the given name exists in the product list.
+     * If found, it validates the new quantity and updates the product's quantity in the database,
+     * then refreshes the in-memory product list.</p>
+     *
+     * @param productName the name of the product whose quantity is to be updated
+     * @param newQuantity the new quantity value to set
+     * @param productList the current list of products to search through
+     * @return {@code ErrorCodes.OK} if the quantity was successfully updated,
+     *         {@code ErrorCodes.NOT_FOUND} if the product does not exist,
+     *         {@code ErrorCodes.NOT_UPDATED} if the update failed,
+     *         or a validation-specific error code if the quantity is invalid
      */
     public static int updateProductQuantityDirectly(String productName, int newQuantity, ProductList productList) {
         if (!containsProductWithName(productName, productList)) {
@@ -343,11 +402,14 @@ public class ProductManager {
     }
 
     /**
-     * method: containsProductWithName
-     * parameters: String inputName
-     * return: boolean
-     * purpose: this method verifies that a product with the name the user
-     * inputs exists
+     * Checks whether a product with the specified name exists in the product list.
+     *
+     * <p>This method performs a case-insensitive search to determine if any product in the list
+     * matches the given name.</p>
+     *
+     * @param inputName the product name to look for
+     * @param products  the list of products to search
+     * @return {@code true} if a product with the specified name exists; {@code false} otherwise
      */
     public static boolean containsProductWithName(String inputName, ProductList products) {
         return products.stream()
@@ -355,15 +417,21 @@ public class ProductManager {
     }
 
     /**
-     * method: getProducts
-     * parameters: none
-     * return: ProductList
-     * purpose: this method returns a list of products for use by the ui.
+     * Returns a cloned list of products for use by the UI.
+     *
+     * <p>This method provides a copy of the internal product list to prevent passing by reference instead of value.</p>
+     *
+     * @return a cloned {@code ProductList} containing all current products
      */
     public static ProductList getProducts() {
         return (ProductList) products.clone();
     }
 
+    /**
+     * Checks if the product list is empty.
+     *
+     * @return {@code true} if there are no products in the list; {@code false} otherwise
+     */
     public static boolean isEmpty() {
         return products.isEmpty();
     }
