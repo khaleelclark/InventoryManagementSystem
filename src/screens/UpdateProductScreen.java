@@ -11,18 +11,38 @@ import javafx.geometry.Insets;
 import src.*;
 
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5th, 2025
- * UpdateProductScreen.java
- * This class creates the update product screen and holds
- * all the ui logic for updating products in the inventory.
+ * Represents the UI screen for updating product details in the inventory system.
+ * <p>
+ * This class builds a JavaFX interface that displays all products in a table with
+ * columns for product attributes such as name, quantity, expected quantity, estimated cost,
+ * category, and location. Users can select a product from the table to populate
+ * a form where they can edit its attributes and submit updates.
+ * <p>
+ * Input validation is performed on product attributes before submission, and
+ * appropriate success or error messages are shown.
+ * </p>
+ * <p>
+ * Includes navigation back to the home screen.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18th, 2025
  */
 public class UpdateProductScreen {
     private final VBox layout;
 
+    /**
+     * Constructs the UpdateProductScreen UI.
+     * <p>
+     * Sets up a product table and a form for editing product details,
+     * including text fields for quantity, expected quantity, estimated cost,
+     * a dropdown for category selection, and a field for location.
+     * Also includes validation of inputs and error handling.
+     * </p>
+     *
+     * @param controller the ScreenController instance used to switch screens
+     */
     public UpdateProductScreen(ScreenController controller) {
-
         Label title = new Label("Update Product");
 
         TableView<Product> productTable = new TableView<>();
@@ -167,7 +187,6 @@ public class UpdateProductScreen {
             }
         });
 
-
         Button backButton = new Button("Back to Home");
         backButton.setOnAction(_ -> controller.activate("home"));
 
@@ -176,6 +195,11 @@ public class UpdateProductScreen {
         VBox.setVgrow(productTable, Priority.ALWAYS);
     }
 
+    /**
+     * Returns the root container (VBox) of this screen’s layout.
+     *
+     * @return the VBox layout containing all UI components for this screen
+     */
     public VBox getView() {
         return layout;
     }
