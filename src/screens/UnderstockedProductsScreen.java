@@ -12,17 +12,35 @@ import src.ProductList;
 import src.ProductManager;
 import src.ScreenController;
 
+
 /**
- * Khaleel Zindel Clark
- * CEN 3024 - Software Development 1
- * July 5th, 2025
- * UnderstockedProductsScreen.java
- * This class creates the understocked products screen and holds
- * all the ui logic for displaying all products understocked in the inventory.
+ * Represents the screen for displaying all understocked products in the inventory.
+ * <p>
+ * This class creates a JavaFX UI screen showing a table of products whose quantity
+ * is below the expected stock level. The table includes product details such as
+ * name, current quantity, expected quantity, estimated cost, category, and location.
+ * If no products are understocked, a message is shown instead.
+ * </p>
+ * <p>
+ * Users can navigate back to the home screen via a back button.
+ * </p>
+ *
+ * @author Khaleel Zindel Clark
+ * @version July 18th, 2025
  */
 public class UnderstockedProductsScreen {
     private final VBox layout;
 
+    /**
+     * Constructs the understocked products screen UI.
+     * <p>
+     * Sets up the product table with columns for product attributes,
+     * populates it with understocked products from the inventory,
+     * and adds navigation back to the home screen.
+     * </p>
+     *
+     * @param controller the ScreenController used to switch screens
+     */
     public UnderstockedProductsScreen(ScreenController controller) {
 
         Label title = new Label("Understocked Products:");
@@ -71,6 +89,11 @@ public class UnderstockedProductsScreen {
         layout.setStyle("-fx-padding: 20;");
     }
 
+    /**
+     * Returns the root layout node of this screen.
+     *
+     * @return a VBox containing all UI elements of this screen
+     */
     public VBox getView() {
         return layout;
     }
