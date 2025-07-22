@@ -59,3 +59,5 @@ cd InventoryManagementSystem
 ```
 
 ### 3. Run InventoryManagementSystem.java to start the program
+
+
