@@ -37,7 +37,7 @@ The IMS is a **GUI-based Java application** backed by a **SQLite database** that
 - *(Optional)* A properly formatted `products.csv` or `products.txt` file:
   
   Example line format:
-  Milk,1,3,2.16,FOOD_BEVERAGES,Fridge
+  `Milk,1,3,2.16,FOOD_BEVERAGES,Fridge`
   
   *(Fields: name, quantity, expected quantity, estimated cost, category, location)*
 
