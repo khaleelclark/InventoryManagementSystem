@@ -33,7 +33,7 @@ The IMS is a **GUI-based Java application** backed by a **SQLite database** that
 
 - Java Development Kit (JDK) 17 or later
 - JavaFX SDK installed and configured in your IDE
-- SQLite database file (`inventory.db`) auto-generates on first run
+- SQLite database file & file path
 - *(Optional)* A properly formatted `products.csv` or `products.txt` file:
   
   Example line format:
